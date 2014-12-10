@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Uno</string>
+    <string name="loading">Chargement ...</string>
+    <string name="play">Aventure</string>
+    <string name="options">Options</string>
+    <string name="level_completed">Bravo !</string>
+    <string name="last_level_completed">Terminé !</string>
+    <string name="retry">Réessayer</string>
+    <string name="next">Suivant</string>
+    <string name="cannot_load_level">Fichier invalide </string>
+    <string name="error_loading_level">Erreur</string>
+    <string name="close">Fermer</string>
+    <string name="level">Niveau</string>
+    <string name="music_on">Musique ON</string>
+    <string name="credits">Crédits</string>
+    <string name="music_off">Musique OFF</string>
+    <string name="exit">Quitter</string>
+    <string name="exit_message">Êtes vous sûr de vouloir quitter le jeu ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="game_designer">Game designer</string>
+    <string name="game_designer_value">Malalatiana Randriamasy</string>
+    <string name="game_developer">Game developer</string>
+    <string name="game_developer_value">Stéphano Telolahy</string>
+    <string name="game_engine">Game engine </string>
+    <string name="game_engine_value">AndEngine</string>
+    <string name="game_studio">Creative Games (c) 2006-</string>
+    <string name="coach_marker_scroll">Déplacez Zemo avec un doigt</string>
+    <string name="coach_marker_pinch">Zoomez avec un deux doigts</string>
+    <string name="rate">Noter</string>
+    <string name="if_you_enjoy">Si vous avez aimé %s, nous vous prions de prendre un moment pour le noter. Merci pour votre support!</string>
+    <string name="remind_me_later">Plus tard</string>
+    <string name="no_thanks">Non, merci</string>
+</resources>
