@@ -1,6 +1,7 @@
 package com.telolahy.solitaire.manager;
 
 import com.telolahy.solitaire.scene.BaseScene;
+import com.telolahy.solitaire.scene.CreditsScene;
 import com.telolahy.solitaire.scene.GameScene;
 import com.telolahy.solitaire.scene.LoadingScene;
 import com.telolahy.solitaire.scene.MainMenuScene;
@@ -24,6 +25,7 @@ public class SceneManager {
     private BaseScene mSplashScene;
     private BaseScene mMenuScene;
     private BaseScene mLoadingScene;
+    private BaseScene mCreditsScene;
     private BaseScene mGameScene;
 
     public static SceneManager getInstance() {
@@ -59,9 +61,9 @@ public class SceneManager {
     public void createMenuScene() {
 
         ResourcesManager.getInstance().loadMenuResources();
-        int maxLevelReached = GameManager.getInstance().maxLevelReached();
         mMenuScene = new MainMenuScene();
         mLoadingScene = new LoadingScene();
+        mCreditsScene = new CreditsScene();
         setScene(mMenuScene);
         disposeSplashScene();
         AppRater.app_launched(ResourcesManager.getInstance().activity);

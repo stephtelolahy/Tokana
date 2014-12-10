@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Uno</string>
     <string name="loading">Loading ...</string>
-    <string name="play">Adventure</string>
+    <string name="play">Play</string>
     <string name="options">Options</string>
     <string name="level_completed">Great !</string>
     <string name="last_level_completed">Completed !</string>
@@ -11,9 +11,9 @@
     <string name="error_loading_level">Error</string>
     <string name="close">Close</string>
     <string name="level">Level</string>
-    <string name="music_on">Music ON</string>
+    <string name="music_on">Sound ON</string>
+    <string name="music_off">Sound OFF</string>
     <string name="credits">Credits</string>
-    <string name="music_off">Music OFF</string>
     <string name="exit">Exit</string>
     <string name="exit_message">Are you sure to quit the game ?</string>
     <string name="yes">Yes</string>
@@ -31,4 +31,5 @@
     <string name="if_you_enjoy">If you enjoy using %s, please take a moment to rate it. Thanks for your support!</string>
     <string name="remind_me_later">Later</string>
     <string name="no_thanks">No, thanks</string>
+    <string name="share">Share</string>
 </resources>

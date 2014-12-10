@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Uno</string>
     <string name="loading">Chargement ...</string>
-    <string name="play">Aventure</string>
+    <string name="play">Jouer</string>
     <string name="options">Options</string>
     <string name="level_completed">Bravo !</string>
     <string name="last_level_completed">Terminé !</string>
@@ -31,4 +31,5 @@
     <string name="if_you_enjoy">Si vous avez aimé %s, nous vous prions de prendre un moment pour le noter. Merci pour votre support!</string>
     <string name="remind_me_later">Plus tard</string>
     <string name="no_thanks">Non, merci</string>
+    <string name="share">Share</string>
 </resources>

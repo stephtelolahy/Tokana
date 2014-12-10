@@ -5,8 +5,11 @@ import android.content.DialogInterface;
 
 import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
+import com.telolahy.solitaire.manager.GameManager;
+import com.telolahy.solitaire.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
@@ -14,6 +17,7 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.util.adt.align.HorizontalAlign;
+import org.andengine.util.adt.color.Color;
 
 /**
  * Created by stephanohuguestelolahy on 11/16/14.
@@ -25,7 +29,8 @@ public class MainMenuScene extends BaseScene {
     // ===========================================================
 
     private static final int MENU_ITEM_PLAY = 1;
-    private static final int MENU_ITEM_OPTIONS = 2;
+    private static final int MENU_ITEM_SHARE = 2;
+    private static final int MENU_ITEM_SOUND = 3;
 
     // ===========================================================
     // Fields
@@ -55,10 +60,12 @@ public class MainMenuScene extends BaseScene {
     @Override
     protected void onCreateScene(int... params) {
 
+        createBackground();
         createHomeMenuChildScene();
         createHUD();
         setupTouchGesture();
     }
+
 
     @Override
     protected void onDisposeScene() {
@@ -78,6 +85,11 @@ public class MainMenuScene extends BaseScene {
     // Methods
     // ===========================================================
 
+    private void createBackground() {
+
+        setBackground(new Background(new Color(66f / 256f, 183f / 256f, 190f / 256f)));
+    }
+
     private void setupTouchGesture() {
 
         this.setTouchAreaBindingOnActionDownEnabled(true);
@@ -89,7 +101,6 @@ public class MainMenuScene extends BaseScene {
     private void createHUD() {
 
         mHUD = new HUD();
-
         mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, mResourcesManager.menuTitleFont, "abcdefghijklmnopqrstuvwxyz", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.app_name));
         mHUD.attachChild(mTitle);
@@ -102,10 +113,16 @@ public class MainMenuScene extends BaseScene {
 
         TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.play), mVertexBufferObjectManager);
         IMenuItem playMenuItem = new ScaleMenuItemDecorator(playTextMenuItem, 1.2f, 1);
-        TextMenuItem optionsTextMenuItem = new TextMenuItem(MENU_ITEM_OPTIONS, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.options), mVertexBufferObjectManager);
-        IMenuItem helpMenuItem = new ScaleMenuItemDecorator(optionsTextMenuItem, 1.2f, 1);
         mHomeMenuScene.addMenuItem(playMenuItem);
-        mHomeMenuScene.addMenuItem(helpMenuItem);
+
+        TextMenuItem shareTextMenuItem = new TextMenuItem(MENU_ITEM_SHARE, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.share), mVertexBufferObjectManager);
+        IMenuItem shareMenuItem = new ScaleMenuItemDecorator(shareTextMenuItem, 1.2f, 1);
+        mHomeMenuScene.addMenuItem(shareMenuItem);
+
+        String text = GameManager.getInstance().isMusicEnabled()? mActivity.getResources().getString(R.string.music_on): mActivity.getResources().getString(R.string.music_off);
+        final TextMenuItem soundTextMenuItem = new TextMenuItem(MENU_ITEM_SOUND, mResourcesManager.menuItemFont, text, mVertexBufferObjectManager);
+        IMenuItem soundMenuItem = new ScaleMenuItemDecorator(soundTextMenuItem, 1.2f, 1);
+        mHomeMenuScene.addMenuItem(soundMenuItem);
 
         mHomeMenuScene.buildAnimations();
         mHomeMenuScene.setBackgroundEnabled(false);
@@ -118,7 +135,12 @@ public class MainMenuScene extends BaseScene {
                 switch (pMenuItem.getID()) {
                     case MENU_ITEM_PLAY:
                         return true;
-                    case MENU_ITEM_OPTIONS:
+                    case MENU_ITEM_SOUND:
+                        boolean soundEnabled = GameManager.getInstance().isMusicEnabled();
+                        soundEnabled = !soundEnabled;
+                        String text = soundEnabled? mActivity.getResources().getString(R.string.music_on): mActivity.getResources().getString(R.string.music_off);
+                        soundTextMenuItem.setText(text);
+                        GameManager.getInstance().setMusicEnabled(soundEnabled);
                         return true;
                     default:
                         return false;
