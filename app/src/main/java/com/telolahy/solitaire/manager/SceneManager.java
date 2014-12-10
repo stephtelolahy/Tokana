@@ -99,16 +99,25 @@ public class SceneManager {
 
     public void loadMenuScene() {
 
-        setScene(mLoadingScene);
-        disposeGameScene();
-        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
-            public void onTimePassed(final TimerHandler pTimerHandler) {
-                mEngine.unregisterUpdateHandler(pTimerHandler);
-                ResourcesManager.getInstance().loadMenuTextures();
-                mMenuScene = new MainMenuScene();
-                mLoadingScene = new LoadingScene();
-                setScene(mMenuScene);
-            }
-        }));
+        if (mCurrentScene == mCreditsScene) {
+            setScene(mMenuScene);
+        } else if (mCurrentScene == mGameScene) {
+            setScene(mLoadingScene);
+            disposeGameScene();
+            mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
+                public void onTimePassed(final TimerHandler pTimerHandler) {
+                    mEngine.unregisterUpdateHandler(pTimerHandler);
+                    ResourcesManager.getInstance().loadMenuTextures();
+                    mMenuScene = new MainMenuScene();
+                    mLoadingScene = new LoadingScene();
+                    setScene(mMenuScene);
+                }
+            }));
+        }
+    }
+
+    public void loadCreditsScene() {
+
+        setScene(mCreditsScene);
     }
 }

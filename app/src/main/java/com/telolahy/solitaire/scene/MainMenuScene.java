@@ -16,6 +16,7 @@ import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 
@@ -101,10 +102,23 @@ public class MainMenuScene extends BaseScene {
     private void createHUD() {
 
         mHUD = new HUD();
-        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, mResourcesManager.menuTitleFont, "abcdefghijklmnopqrstuvwxyz", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
-        mTitle.setText(mResourcesManager.activity.getResources().getString(R.string.app_name));
-        mHUD.attachChild(mTitle);
         mCamera.setHUD(mHUD);
+
+        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT * 3 / 4, mResourcesManager.menuTitleFont, mResourcesManager.activity.getResources().getString(R.string.app_name), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager) {
+            @Override
+            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+
+                if (pSceneTouchEvent.isActionDown()) {
+                    if (GameManager.getInstance().isMusicEnabled())
+                        mResourcesManager.menuItemClickedSound.play();
+                    SceneManager.getInstance().loadCreditsScene();
+                }
+                return true;
+            }
+        };
+
+        mHUD.attachChild(mTitle);
+        registerTouchArea(mTitle);
     }
 
     private void createHomeMenuChildScene() {
@@ -119,7 +133,7 @@ public class MainMenuScene extends BaseScene {
         IMenuItem shareMenuItem = new ScaleMenuItemDecorator(shareTextMenuItem, 1.2f, 1);
         mHomeMenuScene.addMenuItem(shareMenuItem);
 
-        String text = GameManager.getInstance().isMusicEnabled()? mActivity.getResources().getString(R.string.music_on): mActivity.getResources().getString(R.string.music_off);
+        String text = GameManager.getInstance().isMusicEnabled() ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
         final TextMenuItem soundTextMenuItem = new TextMenuItem(MENU_ITEM_SOUND, mResourcesManager.menuItemFont, text, mVertexBufferObjectManager);
         IMenuItem soundMenuItem = new ScaleMenuItemDecorator(soundTextMenuItem, 1.2f, 1);
         mHomeMenuScene.addMenuItem(soundMenuItem);
@@ -131,14 +145,17 @@ public class MainMenuScene extends BaseScene {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
-                mResourcesManager.menuItemClickedSound.play();
+                if (GameManager.getInstance().isMusicEnabled())
+                    mResourcesManager.menuItemClickedSound.play();
+
                 switch (pMenuItem.getID()) {
                     case MENU_ITEM_PLAY:
+                        SceneManager.getInstance().createGameScene(1);
                         return true;
                     case MENU_ITEM_SOUND:
                         boolean soundEnabled = GameManager.getInstance().isMusicEnabled();
                         soundEnabled = !soundEnabled;
-                        String text = soundEnabled? mActivity.getResources().getString(R.string.music_on): mActivity.getResources().getString(R.string.music_off);
+                        String text = soundEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
                         soundTextMenuItem.setText(text);
                         GameManager.getInstance().setMusicEnabled(soundEnabled);
                         return true;

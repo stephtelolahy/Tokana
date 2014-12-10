@@ -67,6 +67,9 @@ public class ResourcesManager {
 
     public Font menuItemFont;
     public Font menuTitleFont;
+    public Font menuLoadingFont;
+    public Font menuCreditsFontWhite;
+    public Font menuCreditsFontGray;
 
     public Sound menuItemClickedSound;
 
@@ -113,13 +116,20 @@ public class ResourcesManager {
 
     private void loadMenuFonts() {
 
-        final ITexture menuTitleFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        menuTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuTitleFontTexture, activity.getAssets(), "font/font.ttf", 96, true, Color.WHITE, 2, Color.BLACK);
+        menuTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 96, true, Color.WHITE, 2, Color.BLACK);
         menuTitleFont.load();
 
-        final ITexture menuItemFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        menuItemFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), menuItemFontTexture, activity.getAssets(), "font/font.ttf", 48, true, Color.BLACK, 0, Color.BLACK);
+        menuItemFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 48, true, Color.BLACK, 0, Color.TRANSPARENT);
         menuItemFont.load();
+
+        menuLoadingFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 48, true, Color.WHITE, 0, Color.TRANSPARENT);
+        menuLoadingFont.load();
+
+        menuCreditsFontWhite = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 0, Color.TRANSPARENT);
+        menuCreditsFontWhite.load();
+
+        menuCreditsFontGray = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.GRAY, 0, Color.TRANSPARENT);
+        menuCreditsFontGray.load();
     }
 
     private void loadMenuMusics() {
