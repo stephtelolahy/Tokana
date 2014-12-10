@@ -64,7 +64,6 @@ public class MainMenuScene extends BaseScene {
         createBackground();
         createHomeMenuChildScene();
         createHUD();
-        setupTouchGesture();
     }
 
 
@@ -89,13 +88,6 @@ public class MainMenuScene extends BaseScene {
     private void createBackground() {
 
         setBackground(new Background(new Color(66f / 256f, 183f / 256f, 190f / 256f)));
-    }
-
-    private void setupTouchGesture() {
-
-        this.setTouchAreaBindingOnActionDownEnabled(true);
-        this.setTouchAreaBindingOnActionMoveEnabled(true);
-        this.setOnSceneTouchListenerBindingOnActionDownEnabled(true);
     }
 
 
