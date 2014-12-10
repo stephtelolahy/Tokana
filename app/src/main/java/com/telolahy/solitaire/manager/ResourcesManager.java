@@ -65,16 +65,22 @@ public class ResourcesManager {
     public ZoomCamera camera;
     public VertexBufferObjectManager vertexBufferObjectManager;
 
-    public Font menuItemFont;
-    public Font menuTitleFont;
-    public Font menuLoadingFont;
-    public Font menuCreditsFontWhite;
-    public Font menuCreditsFontGray;
-
-    public Sound menuItemClickedSound;
 
     // splash resources
     public final TextureDescription splashTexture = new TextureDescription("gfx/splash/creative_games_logo.png");
+
+    // menu resources
+    public Font menuItemFont;
+    public Font menuTitleFont;
+    public Font menuLoadingFont;
+    public Font menuCreditsWhiteFont;
+    public Font menuCreditsGrayFont;
+
+    public Sound menuItemClickedSound;
+
+    // game resources
+    public final TextureDescription gameEmptyTexture = new TextureDescription("gfx/game/empty.png");
+    public final TextureDescription gamePieceTexture = new TextureDescription("gfx/game/piece.png");
 
 
     //---------------------------------------------
@@ -105,13 +111,9 @@ public class ResourcesManager {
 
     public void loadMenuResources() {
 
-        loadMenuGraphics();
+        loadMenuTextures();
         loadMenuFonts();
         loadMenuMusics();
-    }
-
-    private void loadMenuGraphics() {
-
     }
 
     private void loadMenuFonts() {
@@ -125,11 +127,11 @@ public class ResourcesManager {
         menuLoadingFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 48, true, Color.WHITE, 0, Color.TRANSPARENT);
         menuLoadingFont.load();
 
-        menuCreditsFontWhite = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 0, Color.TRANSPARENT);
-        menuCreditsFontWhite.load();
+        menuCreditsWhiteFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 0, Color.TRANSPARENT);
+        menuCreditsWhiteFont.load();
 
-        menuCreditsFontGray = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.GRAY, 0, Color.TRANSPARENT);
-        menuCreditsFontGray.load();
+        menuCreditsGrayFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.GRAY, 0, Color.TRANSPARENT);
+        menuCreditsGrayFont.load();
     }
 
     private void loadMenuMusics() {
@@ -141,26 +143,29 @@ public class ResourcesManager {
         }
     }
 
-    public void unloadMenuTextures() {
+    public void loadMenuTextures() {
 
     }
 
-    public void loadMenuTextures() {
+    public void unloadMenuTextures() {
 
-        loadMenuGraphics();
     }
 
 
     public void loadGameResources() {
 
-        loadGameGraphics();
+        loadGameTextures();
     }
 
-    private void loadGameGraphics() {
+    private void loadGameTextures() {
 
+        gamePieceTexture.load(engine.getTextureManager(), activity);
+        gameEmptyTexture.load(engine.getTextureManager(), activity);
     }
 
     public void unloadGameTextures() {
 
+        gamePieceTexture.unload();
+        gameEmptyTexture.unload();
     }
 }
