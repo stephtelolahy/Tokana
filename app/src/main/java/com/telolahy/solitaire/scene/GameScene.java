@@ -132,6 +132,10 @@ public class GameScene extends BaseScene {
                             @Override
                             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
+                                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
+                                    this.setAlpha(0.8f);
+                                }
+
                                 this.setPosition(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
 
                                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
@@ -163,6 +167,7 @@ public class GameScene extends BaseScene {
         {
             if (piece.collidesWith(place))
             {
+                piece.setAlpha(1.f);
                 piece.setPosition(place.getX(), place.getY());
                 mResourcesManager.menuItemClickedSound.play();
                 break;
