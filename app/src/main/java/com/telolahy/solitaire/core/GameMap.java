@@ -105,8 +105,26 @@ public class GameMap {
         mElement = new char[sizeX][sizeY];
     }
 
-    public boolean isValidMovement(Point source, Point destination) {
-        return getElement(destination) == EMPTY;
+    public Point computeMovement(Point source, Point destination) {
+
+        if (getElement(destination) != EMPTY) {
+            return null;
+        }
+
+        int dx = destination.x - source.x;
+        int dy = destination.y - source.y;
+
+        if (!(dx == 0 && Math.abs(dy) == 2) && !(dy == 0 && Math.abs(dx) == 2)) {
+            return null;
+        }
+
+        Point inter = new Point(source.x + dx / 2, source.y + dy / 2);
+
+        if (getElement(inter) != PIECE) {
+            return null;
+        }
+
+        return inter;
     }
 
     public boolean isLevelCompleted() {

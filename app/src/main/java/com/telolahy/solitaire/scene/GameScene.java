@@ -36,6 +36,7 @@ public class GameScene extends BaseScene {
     }
 
     private GameMap mGame;
+    private GameElement[][] mElements;
 
     private int mX0;
     private int mY0;
@@ -113,6 +114,8 @@ public class GameScene extends BaseScene {
         mX0 = (Constants.SCREEN_WIDTH - worldWidth) / 2;
         mY0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
 
+        mElements = new GameElement[sizeX][sizeY];
+
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
 
@@ -141,11 +144,12 @@ public class GameScene extends BaseScene {
 
 
                                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-                                    checkForCollisionsWithPlaces(this);
+                                    checkMove(this);
                                 }
                                 return true;
                             }
                         };
+                        mElements[x][y] = piece;
                         attachChild(piece);
                         registerTouchArea(piece);
                         break;
@@ -165,7 +169,7 @@ public class GameScene extends BaseScene {
         mMovesText.setText("Moves " + i);
     }
 
-    private void checkForCollisionsWithPlaces(GameElement piece) {
+    private void checkMove(GameElement piece) {
 
         int sourceX = Math.round((piece.startX - mX0)) / mBlockSize;
         int sourceY = Math.round((piece.startY - mY0)) / mBlockSize;
@@ -173,9 +177,9 @@ public class GameScene extends BaseScene {
         int targetX = Math.round((piece.getX() - mX0)) / mBlockSize;
         int targetY = Math.round((piece.getY() - mY0)) / mBlockSize;
 
-        boolean validMovement = mGame.isValidMovement(new Point(sourceX, sourceY), new Point(targetX, targetY));
+        Point inter = mGame.computeMovement(new Point(sourceX, sourceY), new Point(targetX, targetY));
 
-        if (validMovement) {
+        if (inter != null) {
             int posX = mX0 + targetX * mBlockSize + mBlockSize / 2;
             int posY = mY0 + targetY * mBlockSize + mBlockSize / 2;
             piece.setPosition(posX, posY);
@@ -184,6 +188,12 @@ public class GameScene extends BaseScene {
 
             mGame.setElement(new Point(sourceX, sourceY), GameMap.EMPTY);
             mGame.setElement(new Point(targetX, targetY), GameMap.PIECE);
+            mGame.setElement(inter, GameMap.EMPTY);
+
+            mElements[sourceX][sourceY] = null;
+            mElements[targetX][targetY] = piece;
+            mElements[inter.x][inter.y].detachSelf();
+            mElements[inter.x][inter.y] = null;
 
             updateMoves(mMoves + 1);
 
