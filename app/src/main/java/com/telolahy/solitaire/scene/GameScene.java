@@ -35,10 +35,16 @@ public class GameScene extends BaseScene {
         }
     }
 
-    private GameElement mElements[][];
+    private GameMap mGame;
+
     private int mX0;
     private int mY0;
     private int mBlockSize;
+
+    private int mLevel;
+    private int mMoves;
+
+    private Text mMovesText;
 
 
     public GameScene(int... params) {
@@ -48,9 +54,10 @@ public class GameScene extends BaseScene {
     @Override
     protected void onCreateScene(int... params) {
 
+        mLevel = 1;
         createBackground();
-        loadLevel(1);
         createHUD();
+        loadLevel();
     }
 
     @Override
@@ -69,11 +76,11 @@ public class GameScene extends BaseScene {
 
         HUD gameHUD = new HUD();
 
-        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 40, mResourcesManager.menuItemFont, "Level 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 40, mResourcesManager.menuItemFont, "Level " + mLevel, new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         gameHUD.attachChild(levelText);
 
-        Text movesText = new Text(Constants.SCREEN_WIDTH / 2, 40, mResourcesManager.menuItemFont, "Moves: 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
-        gameHUD.attachChild(movesText);
+        mMovesText = new Text(Constants.SCREEN_WIDTH / 2, 40, mResourcesManager.menuItemFont, "Moves: 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        gameHUD.attachChild(mMovesText);
 
         mCamera.setHUD(gameHUD);
     }
@@ -84,18 +91,20 @@ public class GameScene extends BaseScene {
 //        setBackground(new SpriteBackground(new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT/2, mResourcesManager.gameBackground.textureRegion, mVertexBufferObjectManager)));
     }
 
-    private void loadLevel(int level) {
+    private void loadLevel() {
 
-        String levelFile = "level/level" + level + ".txt";
-        GameMap game = GameMap.createGame(levelFile, mActivity);
+        String levelFile = "level/level" + mLevel + ".txt";
+        mGame = GameMap.createGame(levelFile, mActivity);
 
-        if (game == null) {
+        if (mGame == null) {
             displayErrorLoadingLevel(levelFile);
             return;
         }
 
-        final int sizeX = game.getSizeX();
-        final int sizeY = game.getSizeY();
+        updateMoves(0);
+
+        final int sizeX = mGame.getSizeX();
+        final int sizeY = mGame.getSizeY();
 
         mBlockSize = (int) mResourcesManager.gameEmptyTexture.textureRegion.getWidth();
         int worldWidth = mBlockSize * sizeX;
@@ -104,19 +113,16 @@ public class GameScene extends BaseScene {
         mX0 = (Constants.SCREEN_WIDTH - worldWidth) / 2;
         mY0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
 
-        mElements = new GameElement[sizeX][sizeY];
-
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
 
                 int posX = mX0 + x * mBlockSize + mBlockSize / 2;
                 int posY = mY0 + y * mBlockSize + mBlockSize / 2;
 
-                switch (game.getElement(new Point(x, y))) {
+                switch (mGame.getElement(new Point(x, y))) {
 
                     case GameMap.EMPTY:
                         attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
-                        mElements[x][y] = null;
                         break;
 
                     case GameMap.PIECE:
@@ -140,13 +146,11 @@ public class GameScene extends BaseScene {
                                 return true;
                             }
                         };
-                        mElements[x][y] = piece;
                         attachChild(piece);
                         registerTouchArea(piece);
                         break;
 
                     default:
-                        mElements[x][y] = null;
                         break;
                 }
             }
@@ -155,16 +159,21 @@ public class GameScene extends BaseScene {
         setTouchAreaBindingOnActionDownEnabled(true);
     }
 
+    private void updateMoves(final int i) {
+
+        mMoves = i;
+        mMovesText.setText("Moves " + i);
+    }
+
     private void checkForCollisionsWithPlaces(GameElement piece) {
+
         int sourceX = Math.round((piece.startX - mX0)) / mBlockSize;
         int sourceY = Math.round((piece.startY - mY0)) / mBlockSize;
 
         int targetX = Math.round((piece.getX() - mX0)) / mBlockSize;
         int targetY = Math.round((piece.getY() - mY0)) / mBlockSize;
 
-        // TODO validate target
-
-        boolean validMovement = mElements[targetX][targetY] == null;
+        boolean validMovement = mGame.isValidMovement(new Point(sourceX, sourceY), new Point(targetX, targetY));
 
         if (validMovement) {
             int posX = mX0 + targetX * mBlockSize + mBlockSize / 2;
@@ -173,8 +182,11 @@ public class GameScene extends BaseScene {
 
             mResourcesManager.menuItemClickedSound.play();
 
-            mElements[sourceX][sourceY] = null;
-            mElements[targetX][targetY] = piece;
+            mGame.setElement(new Point(sourceX, sourceY), GameMap.EMPTY);
+            mGame.setElement(new Point(targetX, targetY), GameMap.PIECE);
+
+            updateMoves(mMoves + 1);
+
         } else {
             piece.setPosition(piece.startX, piece.startY);
         }

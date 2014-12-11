@@ -105,6 +105,10 @@ public class GameMap {
         mElement = new char[sizeX][sizeY];
     }
 
+    public boolean isValidMovement(Point source, Point destination) {
+        return getElement(destination) == EMPTY;
+    }
+
     public boolean isLevelCompleted() {
         return false;
     }
