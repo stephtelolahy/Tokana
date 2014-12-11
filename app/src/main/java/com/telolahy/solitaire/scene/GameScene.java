@@ -10,8 +10,13 @@ import com.telolahy.solitaire.application.Constants;
 import com.telolahy.solitaire.core.GameMap;
 import com.telolahy.solitaire.manager.SceneManager;
 
+import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
+import org.andengine.input.touch.TouchEvent;
+import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 
 import java.util.ArrayList;
@@ -33,7 +38,7 @@ public class GameScene extends BaseScene {
 
         createBackground();
         loadLevel(1);
-
+        createHUD();
     }
 
     @Override
@@ -47,9 +52,23 @@ public class GameScene extends BaseScene {
         exitGame(false);
     }
 
+    private void createHUD() {
+
+        HUD gameHUD = new HUD();
+
+        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 40, mResourcesManager.menuItemFont, "Level 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        gameHUD.attachChild(levelText);
+
+        Text movesText = new Text(Constants.SCREEN_WIDTH / 2, 40, mResourcesManager.menuItemFont, "Moves: 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        gameHUD.attachChild(movesText);
+
+        mCamera.setHUD(gameHUD);
+    }
+
     private void createBackground() {
 
         setBackground(new Background(new Color(66f / 256f, 183f / 256f, 190f / 256f)));
+//        setBackground(new SpriteBackground(new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT/2, mResourcesManager.gameBackground.textureRegion, mVertexBufferObjectManager)));
     }
 
     private void loadLevel(int level) {
@@ -62,7 +81,7 @@ public class GameScene extends BaseScene {
             return;
         }
 
-        final int blocSize = (int) mResourcesManager.gameEmptyTexture.textureRegion.getWidth() + 4;
+        final int blocSize = (int) mResourcesManager.gameEmptyTexture.textureRegion.getWidth();
         int worldWidth = blocSize * mGame.getSizeX();
         int worldHeight = blocSize * mGame.getSizeY();
 
@@ -84,7 +103,23 @@ public class GameScene extends BaseScene {
                         break;
 
                     case GameMap.PIECE:
-                        attachChild(new Sprite(posX, posY, mResourcesManager.gamePieceTexture.textureRegion, mVertexBufferObjectManager));
+                        attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
+
+                        Sprite piece = new Sprite(posX, posY, mResourcesManager.gamePieceTexture.textureRegion, mVertexBufferObjectManager) {
+                            @Override
+                            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+
+                                this.setPosition(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
+
+//                                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+//                                    checkForCollisionsWithTowers(this);
+//                                }
+                                return true;
+                            }
+                        };
+
+                        attachChild(piece);
+                        registerTouchArea(piece);
                         break;
 
                     default:
@@ -92,6 +127,8 @@ public class GameScene extends BaseScene {
                 }
             }
         }
+
+        setTouchAreaBindingOnActionDownEnabled(true);
     }
 
     private void displayErrorLoadingLevel(final String levelFile) {

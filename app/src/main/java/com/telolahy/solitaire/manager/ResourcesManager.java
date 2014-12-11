@@ -81,6 +81,7 @@ public class ResourcesManager {
     // game resources
     public final TextureDescription gameEmptyTexture = new TextureDescription("gfx/game/empty.png");
     public final TextureDescription gamePieceTexture = new TextureDescription("gfx/game/piece.png");
+    public final TextureDescription gameBackground = new TextureDescription("gfx/game/background.png");
 
 
     //---------------------------------------------
@@ -161,11 +162,13 @@ public class ResourcesManager {
 
         gamePieceTexture.load(engine.getTextureManager(), activity);
         gameEmptyTexture.load(engine.getTextureManager(), activity);
+        gameBackground.load(engine.getTextureManager(), activity);
     }
 
     public void unloadGameTextures() {
 
         gamePieceTexture.unload();
         gameEmptyTexture.unload();
+        gameBackground.unload();
     }
 }
