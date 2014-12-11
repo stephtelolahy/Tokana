@@ -21,30 +21,25 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 
-import java.util.ArrayList;
-
 /**
  * Created by stephanohuguestelolahy on 11/16/14.
  */
 public class GameScene extends BaseScene {
 
+    static class GameElement extends Sprite {
+        public float startX;
+        public float startY;
 
-    static class GameElement extends Sprite
-    {
-        public int locationX;
-        public int locationY;
-
-        GameElement(final float pX, final float pY, final ITextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager, final int pLocationX, final int pLocationY)
-        {
-            super(pX, pY, pTextureRegion,pVertexBufferObjectManager);
-            this.locationX = pLocationX;
-            this.locationY = pLocationY;
+        GameElement(final float pX, final float pY, final ITextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
+            super(pX, pY, pTextureRegion, pVertexBufferObjectManager);
         }
     }
 
-    GameMap mGame;
-    ArrayList<GameElement> mPieces;
-    ArrayList<GameElement> mPlaces;
+    private GameElement mElements[][];
+    private int mX0;
+    private int mY0;
+    private int mBlockSize;
+
 
     public GameScene(int... params) {
         super(params);
@@ -92,51 +87,52 @@ public class GameScene extends BaseScene {
     private void loadLevel(int level) {
 
         String levelFile = "level/level" + level + ".txt";
-        mGame = GameMap.createGame(levelFile, mActivity);
+        GameMap game = GameMap.createGame(levelFile, mActivity);
 
-        if (mGame == null) {
+        if (game == null) {
             displayErrorLoadingLevel(levelFile);
             return;
         }
 
-        final int blocSize = (int) mResourcesManager.gameEmptyTexture.textureRegion.getWidth();
-        int worldWidth = blocSize * mGame.getSizeX();
-        int worldHeight = blocSize * mGame.getSizeY();
+        final int sizeX = game.getSizeX();
+        final int sizeY = game.getSizeY();
 
-        final int x0 = (Constants.SCREEN_WIDTH - worldWidth) / 2;
-        final int y0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
+        mBlockSize = (int) mResourcesManager.gameEmptyTexture.textureRegion.getWidth();
+        int worldWidth = mBlockSize * sizeX;
+        int worldHeight = mBlockSize * sizeY;
 
-        mPlaces = new ArrayList<GameElement>();
-        mPieces = new ArrayList<GameElement>();
+        mX0 = (Constants.SCREEN_WIDTH - worldWidth) / 2;
+        mY0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
 
-        for (int y = 0; y < mGame.getSizeY(); y++) {
-            for (int x = 0; x < mGame.getSizeX(); x++) {
+        mElements = new GameElement[sizeX][sizeY];
 
-                int posX = x0 + x * blocSize + blocSize / 2;
-                int posY = y0 + y * blocSize + blocSize / 2;
+        for (int y = 0; y < sizeY; y++) {
+            for (int x = 0; x < sizeX; x++) {
 
-                switch (mGame.getElement(new Point(x, y))) {
+                int posX = mX0 + x * mBlockSize + mBlockSize / 2;
+                int posY = mY0 + y * mBlockSize + mBlockSize / 2;
+
+                switch (game.getElement(new Point(x, y))) {
 
                     case GameMap.EMPTY:
-                        GameElement place = new GameElement(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager, x, y);
-                        mPlaces.add(place);
-                        attachChild(place);
+                        attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
+                        mElements[x][y] = null;
                         break;
 
                     case GameMap.PIECE:
-                        GameElement placeFull = new GameElement(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager, x, y);
-                        mPlaces.add(placeFull);
-                        attachChild(placeFull);
+                        attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
 
-                        GameElement piece = new GameElement(posX, posY, mResourcesManager.gamePieceTexture.textureRegion, mVertexBufferObjectManager, x, y) {
+                        GameElement piece = new GameElement(posX, posY, mResourcesManager.gamePieceTexture.textureRegion, mVertexBufferObjectManager) {
                             @Override
                             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
                                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
-                                    this.setAlpha(0.8f);
+                                    this.startX = this.getX();
+                                    this.startY = this.getY();
                                 }
 
                                 this.setPosition(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
+
 
                                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
                                     checkForCollisionsWithPlaces(this);
@@ -144,34 +140,43 @@ public class GameScene extends BaseScene {
                                 return true;
                             }
                         };
-                        mPieces.add(piece);
+                        mElements[x][y] = piece;
+                        attachChild(piece);
+                        registerTouchArea(piece);
                         break;
 
                     default:
+                        mElements[x][y] = null;
                         break;
                 }
             }
         }
 
-        for(GameElement piece: mPieces)
-        {
-            attachChild(piece);
-            registerTouchArea(piece);
-        }
         setTouchAreaBindingOnActionDownEnabled(true);
     }
 
-    private void checkForCollisionsWithPlaces(GameElement piece)
-    {
-        for(GameElement place: mPlaces)
-        {
-            if (piece.collidesWith(place))
-            {
-                piece.setAlpha(1.f);
-                piece.setPosition(place.getX(), place.getY());
-                mResourcesManager.menuItemClickedSound.play();
-                break;
-            }
+    private void checkForCollisionsWithPlaces(GameElement piece) {
+        int sourceX = Math.round((piece.startX - mX0)) / mBlockSize;
+        int sourceY = Math.round((piece.startY - mY0)) / mBlockSize;
+
+        int targetX = Math.round((piece.getX() - mX0)) / mBlockSize;
+        int targetY = Math.round((piece.getY() - mY0)) / mBlockSize;
+
+        // TODO validate target
+
+        boolean validMovement = mElements[targetX][targetY] == null;
+
+        if (validMovement) {
+            int posX = mX0 + targetX * mBlockSize + mBlockSize / 2;
+            int posY = mY0 + targetY * mBlockSize + mBlockSize / 2;
+            piece.setPosition(posX, posY);
+
+            mResourcesManager.menuItemClickedSound.play();
+
+            mElements[sourceX][sourceY] = null;
+            mElements[targetX][targetY] = piece;
+        } else {
+            piece.setPosition(piece.startX, piece.startY);
         }
     }
 
