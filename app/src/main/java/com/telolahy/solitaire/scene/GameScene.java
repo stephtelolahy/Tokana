@@ -16,6 +16,8 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 
@@ -26,8 +28,23 @@ import java.util.ArrayList;
  */
 public class GameScene extends BaseScene {
 
+
+    static class GameElement extends Sprite
+    {
+        public int locationX;
+        public int locationY;
+
+        GameElement(final float pX, final float pY, final ITextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager, final int pLocationX, final int pLocationY)
+        {
+            super(pX, pY, pTextureRegion,pVertexBufferObjectManager);
+            this.locationX = pLocationX;
+            this.locationY = pLocationY;
+        }
+    }
+
     GameMap mGame;
-    ArrayList<Sprite> mPieces;
+    ArrayList<GameElement> mPieces;
+    ArrayList<GameElement> mPlaces;
 
     public GameScene(int... params) {
         super(params);
@@ -44,6 +61,7 @@ public class GameScene extends BaseScene {
     @Override
     protected void onDisposeScene() {
 
+        mCamera.setHUD(null);
     }
 
     @Override
@@ -88,7 +106,8 @@ public class GameScene extends BaseScene {
         final int x0 = (Constants.SCREEN_WIDTH - worldWidth) / 2;
         final int y0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
 
-        mPieces = new ArrayList<Sprite>();
+        mPlaces = new ArrayList<GameElement>();
+        mPieces = new ArrayList<GameElement>();
 
         for (int y = 0; y < mGame.getSizeY(); y++) {
             for (int x = 0; x < mGame.getSizeX(); x++) {
@@ -99,27 +118,29 @@ public class GameScene extends BaseScene {
                 switch (mGame.getElement(new Point(x, y))) {
 
                     case GameMap.EMPTY:
-                        attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
+                        GameElement place = new GameElement(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager, x, y);
+                        mPlaces.add(place);
+                        attachChild(place);
                         break;
 
                     case GameMap.PIECE:
-                        attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
+                        GameElement placeFull = new GameElement(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager, x, y);
+                        mPlaces.add(placeFull);
+                        attachChild(placeFull);
 
-                        Sprite piece = new Sprite(posX, posY, mResourcesManager.gamePieceTexture.textureRegion, mVertexBufferObjectManager) {
+                        GameElement piece = new GameElement(posX, posY, mResourcesManager.gamePieceTexture.textureRegion, mVertexBufferObjectManager, x, y) {
                             @Override
                             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
                                 this.setPosition(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
 
-//                                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-//                                    checkForCollisionsWithTowers(this);
-//                                }
+                                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+                                    checkForCollisionsWithPlaces(this);
+                                }
                                 return true;
                             }
                         };
-
-                        attachChild(piece);
-                        registerTouchArea(piece);
+                        mPieces.add(piece);
                         break;
 
                     default:
@@ -128,7 +149,25 @@ public class GameScene extends BaseScene {
             }
         }
 
+        for(GameElement piece: mPieces)
+        {
+            attachChild(piece);
+            registerTouchArea(piece);
+        }
         setTouchAreaBindingOnActionDownEnabled(true);
+    }
+
+    private void checkForCollisionsWithPlaces(GameElement piece)
+    {
+        for(GameElement place: mPlaces)
+        {
+            if (piece.collidesWith(place))
+            {
+                piece.setPosition(place.getX(), place.getY());
+                mResourcesManager.menuItemClickedSound.play();
+                break;
+            }
+        }
     }
 
     private void displayErrorLoadingLevel(final String levelFile) {
