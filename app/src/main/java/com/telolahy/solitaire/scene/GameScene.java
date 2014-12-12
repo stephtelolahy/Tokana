@@ -51,7 +51,7 @@ public class GameScene extends BaseScene {
     private int mRemaining;
 
     private Text mRemainsText;
-
+    private Background mBackground;
 
     public GameScene(int... params) {
         super(params);
@@ -93,7 +93,8 @@ public class GameScene extends BaseScene {
 
     private void createBackground() {
 
-        setBackground(new Background(new Color(66f / 256f, 183f / 256f, 190f / 256f)));
+        mBackground = new Background(new Color(66f / 256f, 183f / 256f, 190f / 256f));
+        setBackground(mBackground);
 //        setBackground(new SpriteBackground(new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT/2, mResourcesManager.gameBackground.textureRegion, mVertexBufferObjectManager)));
     }
 
@@ -185,6 +186,9 @@ public class GameScene extends BaseScene {
 
         mRemaining = i;
         mRemainsText.setText("Remains " + i);
+
+        int c = 36 - i;
+        mBackground.setColor(new Color((66f + 5 * c) / 256f, (183f - 4 * c) / 256f, (190f - 4 * c) / 256f));
     }
 
     private void checkMove(GameElement piece) {
