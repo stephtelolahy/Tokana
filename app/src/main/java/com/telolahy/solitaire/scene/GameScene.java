@@ -13,6 +13,7 @@ import com.telolahy.solitaire.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.Background;
+import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
@@ -64,7 +65,6 @@ public class GameScene extends BaseScene {
 
     private Text mScoreText;
     private Text mBestText;
-    private Background mBackground;
 
     public GameScene(int... params) {
         super(params);
@@ -96,8 +96,7 @@ public class GameScene extends BaseScene {
 
     private void createBackground() {
 
-        mBackground = new Background(new Color(66f / 256f, 183f / 256f, 190f / 256f));
-        setBackground(mBackground);
+        setBackground(new SpriteBackground(new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.gameBackground.textureRegion, mVertexBufferObjectManager)));
     }
 
     private void createHUD() {
@@ -275,8 +274,6 @@ public class GameScene extends BaseScene {
         if (best > savedBest) {
             GameManager.getInstance().saveMaxScore(best);
         }
-
-//        mBackground.setColor(new Color((66f + 5 * i) / 256f, (183f - 4 * i) / 256f, (190f - 4 * i) / 256f));
     }
 
     private void checkMove(GameElement piece) {

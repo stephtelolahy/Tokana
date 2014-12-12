@@ -2,12 +2,12 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEngine/src/main/res" />
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEngine/build/generated/res/rs/debug" />
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEngine/build/generated/res/generated/debug" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEngine/src/main/res" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEngine/build/generated/res/rs/debug" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEngine/build/generated/res/generated/debug" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEngine/src/debug/res" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEngine/src/debug/res" />
     </dataSet>
 
 </merger>

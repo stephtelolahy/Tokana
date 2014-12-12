@@ -2,15 +2,15 @@
 <merger version="2" >
 
     <dataSet config="unspecified" >
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/build/intermediates/exploded-aar/Solitaire/andEngine/unspecified/res" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/build/intermediates/exploded-aar/Solitaire/andEngine/unspecified/res" />
     </dataSet>
     <dataSet config="main" >
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/src/main/res" />
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/build/generated/res/rs/release" />
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/build/generated/res/generated/release" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/src/main/res" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/build/generated/res/rs/release" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/build/generated/res/generated/release" />
     </dataSet>
     <dataSet config="release" >
-        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/src/release/res" />
+        <source path="/Users/telolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/src/release/res" />
     </dataSet>
 
 </merger>
