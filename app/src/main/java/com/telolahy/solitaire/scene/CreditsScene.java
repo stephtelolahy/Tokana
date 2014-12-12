@@ -7,7 +7,9 @@ import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
 import com.telolahy.solitaire.manager.SceneManager;
 
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
+import org.andengine.util.adt.color.Color;
 
 import java.util.Calendar;
 
@@ -18,6 +20,8 @@ public class CreditsScene extends BaseScene {
 
     @Override
     protected void onCreateScene(int... params) {
+
+        setBackground(new Background(new Color(231f / 256f, 231f / 256f, 231f / 256f)));
 
         attachChild(new Text(Constants.SCREEN_WIDTH / 2, 300, mResourcesManager.menuCreditsGrayFont, mActivity.getResources().getString(R.string.game_developer), mVertexBufferObjectManager));
         attachChild(new Text(Constants.SCREEN_WIDTH / 2, 260, mResourcesManager.menuCreditsWhiteFont, mActivity.getResources().getString(R.string.game_developer_value), mVertexBufferObjectManager));

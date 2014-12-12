@@ -104,7 +104,7 @@ public class GameScene extends BaseScene {
         mHUD = new HUD();
         mCamera.setHUD(mHUD);
 
-        mTitle = new Text(64, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont, mResourcesManager.activity.getResources().getString(R.string.app_name), new TextOptions(HorizontalAlign.LEFT), mVertexBufferObjectManager) {
+        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont, mResourcesManager.activity.getResources().getString(R.string.app_name), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 
@@ -120,10 +120,10 @@ public class GameScene extends BaseScene {
         mHUD.attachChild(mTitle);
         registerTouchArea(mTitle);
 
-        mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuItemFont, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuCreditsGrayFont, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         mHUD.attachChild(mScoreText);
 
-        mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuItemFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuCreditsGrayFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         mHUD.attachChild(mBestText);
     }
 
