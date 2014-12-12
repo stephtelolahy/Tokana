@@ -27,6 +27,8 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 
+import java.util.ArrayList;
+
 /**
  * Created by stephanohuguestelolahy on 11/16/14.
  */
@@ -200,6 +202,7 @@ public class GameScene extends BaseScene {
         mY0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
 
         mElements = new GameElement[sizeX][sizeY];
+        ArrayList<GameElement> pieces = new ArrayList<GameElement>();
 
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
@@ -244,8 +247,7 @@ public class GameScene extends BaseScene {
                             }
                         };
                         mElements[x][y] = piece;
-                        attachChild(piece);
-                        registerTouchArea(piece);
+                        pieces.add(piece);
                         break;
 
                     default:
@@ -255,6 +257,12 @@ public class GameScene extends BaseScene {
             }
 
             updateMoves(0);
+        }
+
+        for (GameElement piece: pieces)
+        {
+            attachChild(piece);
+            registerTouchArea(piece);
         }
 
         setTouchAreaBindingOnActionDownEnabled(true);
