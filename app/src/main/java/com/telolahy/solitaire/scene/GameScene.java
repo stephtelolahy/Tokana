@@ -123,10 +123,10 @@ public class GameScene extends BaseScene {
         registerTouchArea(mTitle);
 
         mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuCreditsGrayFont, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
-        mHUD.attachChild(mScoreText);
+        attachChild(mScoreText);
 
         mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuCreditsGrayFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
-        mHUD.attachChild(mBestText);
+        attachChild(mBestText);
     }
 
     private void createMenu() {
@@ -259,8 +259,7 @@ public class GameScene extends BaseScene {
             updateMoves(0);
         }
 
-        for (GameElement piece: pieces)
-        {
+        for (GameElement piece : pieces) {
             attachChild(piece);
             registerTouchArea(piece);
         }

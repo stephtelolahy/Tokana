@@ -85,7 +85,7 @@ public class SceneManager {
         setScene(mLoadingScene);
         mGameScene.disposeScene();
         mGameScene = null;
-        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
+        mEngine.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
             public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 mGameScene = new GameScene(1);
