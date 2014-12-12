@@ -13,6 +13,10 @@ import com.telolahy.solitaire.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.Background;
+import org.andengine.entity.scene.menu.MenuScene;
+import org.andengine.entity.scene.menu.item.IMenuItem;
+import org.andengine.entity.scene.menu.item.TextMenuItem;
+import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
@@ -39,6 +43,14 @@ public class GameScene extends BaseScene {
         }
     }
 
+    private static final int MENU_ITEM_PLAY = 1;
+    private static final int MENU_ITEM_SHARE = 2;
+    private static final int MENU_ITEM_SOUND = 3;
+
+    private HUD mHUD;
+    private Text mTitle;
+    private MenuScene mMenuScene;
+
     private GameMap mGame;
     private GameElement[][] mElements;
     private GameElement mCurrentTouchElement;
@@ -48,9 +60,9 @@ public class GameScene extends BaseScene {
     private int mBlockSize;
 
     private int mLevel;
-    private int mRemaining;
+    private int mMoves;
 
-    private Text mRemainsText;
+    private Text mScoreText;
     private Background mBackground;
 
     public GameScene(int... params) {
@@ -63,6 +75,7 @@ public class GameScene extends BaseScene {
         mLevel = 1;
         createBackground();
         createHUD();
+        createMenu();
         loadLevel();
     }
 
@@ -70,33 +83,98 @@ public class GameScene extends BaseScene {
     protected void onDisposeScene() {
 
         mCamera.setHUD(null);
+        mHUD.detachSelf();
+        mMenuScene.dispose();
     }
 
     @Override
     public void onBackKeyPressed() {
 
-        exitGame(false);
-    }
-
-    private void createHUD() {
-
-        HUD gameHUD = new HUD();
-
-        Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 40, mResourcesManager.menuItemFont, "Level " + mLevel, new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
-        gameHUD.attachChild(levelText);
-
-        mRemainsText = new Text(Constants.SCREEN_WIDTH / 2, 40, mResourcesManager.menuItemFont, "Moves: 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
-        gameHUD.attachChild(mRemainsText);
-
-        mCamera.setHUD(gameHUD);
+        displayExitDialog();
     }
 
     private void createBackground() {
 
         mBackground = new Background(new Color(66f / 256f, 183f / 256f, 190f / 256f));
         setBackground(mBackground);
-//        setBackground(new SpriteBackground(new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT/2, mResourcesManager.gameBackground.textureRegion, mVertexBufferObjectManager)));
     }
+
+    private void createHUD() {
+
+        mHUD = new HUD();
+        mCamera.setHUD(mHUD);
+
+        mTitle = new Text(64, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont, mResourcesManager.activity.getResources().getString(R.string.app_name), new TextOptions(HorizontalAlign.LEFT), mVertexBufferObjectManager) {
+            @Override
+            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+
+                if (pSceneTouchEvent.isActionDown()) {
+                    if (GameManager.getInstance().isMusicEnabled())
+                        mResourcesManager.menuItemClickedSound.play();
+                    SceneManager.getInstance().loadCreditsScene();
+                }
+                return true;
+            }
+        };
+
+        mHUD.attachChild(mTitle);
+        registerTouchArea(mTitle);
+
+        mScoreText = new Text(Constants.SCREEN_WIDTH / 2, 40, mResourcesManager.menuItemFont, "Moves: 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mHUD.attachChild(mScoreText);
+    }
+
+    private void createMenu() {
+
+        mMenuScene = new MenuScene(mCamera);
+
+        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.replay), mVertexBufferObjectManager);
+        IMenuItem playMenuItem = new ScaleMenuItemDecorator(playTextMenuItem, 1.2f, 1);
+        mMenuScene.addMenuItem(playMenuItem);
+
+        TextMenuItem shareTextMenuItem = new TextMenuItem(MENU_ITEM_SHARE, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.share), mVertexBufferObjectManager);
+        IMenuItem shareMenuItem = new ScaleMenuItemDecorator(shareTextMenuItem, 1.2f, 1);
+        mMenuScene.addMenuItem(shareMenuItem);
+
+        String text = GameManager.getInstance().isMusicEnabled() ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
+        final TextMenuItem soundTextMenuItem = new TextMenuItem(MENU_ITEM_SOUND, mResourcesManager.menuItemFont, text, mVertexBufferObjectManager);
+        IMenuItem soundMenuItem = new ScaleMenuItemDecorator(soundTextMenuItem, 1.2f, 1);
+        mMenuScene.addMenuItem(soundMenuItem);
+
+        mMenuScene.buildAnimations();
+        mMenuScene.setBackgroundEnabled(false);
+
+        playMenuItem.setPosition(Constants.SCREEN_WIDTH / 6, Constants.SCREEN_HEIGHT - 100);
+        shareMenuItem.setPosition(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 100);
+        soundMenuItem.setPosition(Constants.SCREEN_WIDTH * 5 / 6, Constants.SCREEN_HEIGHT - 100);
+
+        mMenuScene.setOnMenuItemClickListener(new MenuScene.IOnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
+
+                if (GameManager.getInstance().isMusicEnabled())
+                    mResourcesManager.menuItemClickedSound.play();
+
+                switch (pMenuItem.getID()) {
+                    case MENU_ITEM_PLAY:
+                        SceneManager.getInstance().reloadGameScene();
+                        return true;
+                    case MENU_ITEM_SOUND:
+                        boolean soundEnabled = GameManager.getInstance().isMusicEnabled();
+                        soundEnabled = !soundEnabled;
+                        String text = soundEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
+                        soundTextMenuItem.setText(text);
+                        GameManager.getInstance().setMusicEnabled(soundEnabled);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        setChildScene(mMenuScene);
+
+    }
+
 
     private void loadLevel() {
 
@@ -119,8 +197,6 @@ public class GameScene extends BaseScene {
         mY0 = (Constants.SCREEN_HEIGHT - worldHeight) / 2;
 
         mElements = new GameElement[sizeX][sizeY];
-
-        int pieces = 0;
 
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
@@ -165,7 +241,6 @@ public class GameScene extends BaseScene {
                             }
                         };
                         mElements[x][y] = piece;
-                        pieces++;
                         attachChild(piece);
                         registerTouchArea(piece);
                         break;
@@ -176,19 +251,18 @@ public class GameScene extends BaseScene {
                 }
             }
 
-            updateRemaining(pieces);
+            updateMoves(0);
         }
 
         setTouchAreaBindingOnActionDownEnabled(true);
     }
 
-    private void updateRemaining(final int i) {
+    private void updateMoves(final int i) {
 
-        mRemaining = i;
-        mRemainsText.setText("Remains " + i);
+        mMoves = i;
+        mScoreText.setText("Score " + i);
 
-        int c = 36 - i;
-        mBackground.setColor(new Color((66f + 5 * c) / 256f, (183f - 4 * c) / 256f, (190f - 4 * c) / 256f));
+        mBackground.setColor(new Color((66f + 5 * i) / 256f, (183f - 4 * i) / 256f, (190f - 4 * i) / 256f));
     }
 
     private void checkMove(GameElement piece) {
@@ -223,7 +297,7 @@ public class GameScene extends BaseScene {
             mElements[targetX][targetY] = piece;
             mElements[inter.x][inter.y] = null;
 
-            updateRemaining(mRemaining - 1);
+            updateMoves(mMoves + 1);
 
             if (GameManager.getInstance().isMusicEnabled())
                 mResourcesManager.menuItemClickedSound.play();
@@ -247,7 +321,7 @@ public class GameScene extends BaseScene {
                 ad.setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        exitGame(false);
+                        System.exit(0);
                     }
                 });
                 ad.show();
@@ -255,8 +329,30 @@ public class GameScene extends BaseScene {
         });
     }
 
-    private void exitGame(boolean completed) {
+    private void displayExitDialog() {
 
-        SceneManager.getInstance().loadMenuScene();
+        mActivity.runOnUiThread(new Runnable() {
+            public void run() {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setTitle(mResourcesManager.activity.getResources().getString(R.string.exit));
+                builder.setMessage(mResourcesManager.activity.getResources().getString(R.string.exit_message));
+                builder.setPositiveButton((mResourcesManager.activity.getResources().getString(R.string.yes)), new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.exit(0);
+                    }
+                });
+                builder.setNegativeButton(mResourcesManager.activity.getResources().getString(R.string.no), null);
+                builder.setCancelable(false);
+                builder.show();
+            }
+        });
+    }
+
+    private void reloadGame() {
+        this.detachChildren();
+        loadLevel();
     }
 }

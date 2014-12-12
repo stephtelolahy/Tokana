@@ -53,7 +53,7 @@ public class SplashScene extends BaseScene {
 
             @Override
             public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
-                SceneManager.getInstance().createMenuScene();
+                SceneManager.getInstance().createGameScene(1);
             }
         });
         mBackground.registerEntityModifier(sequenceModifier);

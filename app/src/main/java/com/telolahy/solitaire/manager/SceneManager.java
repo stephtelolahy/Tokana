@@ -4,7 +4,6 @@ import com.telolahy.solitaire.scene.BaseScene;
 import com.telolahy.solitaire.scene.CreditsScene;
 import com.telolahy.solitaire.scene.GameScene;
 import com.telolahy.solitaire.scene.LoadingScene;
-import com.telolahy.solitaire.scene.MainMenuScene;
 import com.telolahy.solitaire.scene.SplashScene;
 import com.telolahy.utils.AppRater;
 
@@ -58,66 +57,41 @@ public class SceneManager {
         ResourcesManager.getInstance().unloadSplashResources();
     }
 
-    public void createMenuScene() {
-
-        ResourcesManager.getInstance().loadMenuResources();
-        mMenuScene = new MainMenuScene();
-        mLoadingScene = new LoadingScene();
-        mCreditsScene = new CreditsScene();
-        setScene(mMenuScene);
-        disposeSplashScene();
-        AppRater.app_launched(ResourcesManager.getInstance().activity);
-    }
-
-    private void disposeMenuScene() {
-
-        mMenuScene.disposeScene();
-        mMenuScene = null;
-        ResourcesManager.getInstance().unloadMenuTextures();
-    }
-
     public void createGameScene(final int level) {
 
-        setScene(mLoadingScene);
-        disposeMenuScene();
-        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
-            public void onTimePassed(final TimerHandler pTimerHandler) {
-                mEngine.unregisterUpdateHandler(pTimerHandler);
-                ResourcesManager.getInstance().loadGameResources();
-                mGameScene = new GameScene(level);
-                setScene(mGameScene);
-            }
-        }));
-    }
-
-    private void disposeGameScene() {
-
-        mGameScene.disposeScene();
-        mGameScene = null;
-        ResourcesManager.getInstance().unloadGameTextures();
-    }
-
-    public void loadMenuScene() {
-
-        if (mCurrentScene == mCreditsScene) {
-            setScene(mMenuScene);
-        } else if (mCurrentScene == mGameScene) {
-            setScene(mLoadingScene);
-            disposeGameScene();
-            mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
-                public void onTimePassed(final TimerHandler pTimerHandler) {
-                    mEngine.unregisterUpdateHandler(pTimerHandler);
-                    ResourcesManager.getInstance().loadMenuTextures();
-                    mMenuScene = new MainMenuScene();
-                    mLoadingScene = new LoadingScene();
-                    setScene(mMenuScene);
-                }
-            }));
-        }
+        ResourcesManager.getInstance().loadMenuResources();
+        ResourcesManager.getInstance().loadGameResources();
+        mGameScene = new GameScene(level);
+        mCreditsScene = new CreditsScene();
+        mLoadingScene = new LoadingScene();
+        setScene(mGameScene);
+        disposeSplashScene();
+        AppRater.app_launched(ResourcesManager.getInstance().activity);
     }
 
     public void loadCreditsScene() {
 
         setScene(mCreditsScene);
+    }
+
+    public void loadGameScene() {
+
+        if (mCurrentScene == mCreditsScene) {
+            setScene(mGameScene);
+        }
+    }
+
+    public void reloadGameScene() {
+
+        setScene(mLoadingScene);
+        mGameScene.disposeScene();
+        mGameScene = null;
+        mEngine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
+            public void onTimePassed(final TimerHandler pTimerHandler) {
+                mEngine.unregisterUpdateHandler(pTimerHandler);
+                mGameScene = new GameScene(1);
+                setScene(mGameScene);
+            }
+        }));
     }
 }

@@ -49,6 +49,6 @@ public class CreditsScene extends BaseScene {
     @Override
     public void onBackKeyPressed() {
 
-        SceneManager.getInstance().loadMenuScene();
+        SceneManager.getInstance().loadGameScene();
     }
 }
