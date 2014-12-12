@@ -8,6 +8,7 @@ import android.graphics.Point;
 import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
 import com.telolahy.solitaire.core.GameMap;
+import com.telolahy.solitaire.manager.GameManager;
 import com.telolahy.solitaire.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.HUD;
@@ -27,25 +28,29 @@ import org.andengine.util.adt.color.Color;
 public class GameScene extends BaseScene {
 
     static class GameElement extends Sprite {
-        public float startX;
-        public float startY;
+
+        public float lastX;
+        public float lastY;
 
         GameElement(final float pX, final float pY, final ITextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
             super(pX, pY, pTextureRegion, pVertexBufferObjectManager);
+            lastX = pX;
+            lastY = pY;
         }
     }
 
     private GameMap mGame;
     private GameElement[][] mElements;
+    private GameElement mCurrentTouchElement;
 
     private int mX0;
     private int mY0;
     private int mBlockSize;
 
     private int mLevel;
-    private int mMoves;
+    private int mRemaining;
 
-    private Text mMovesText;
+    private Text mRemainsText;
 
 
     public GameScene(int... params) {
@@ -80,8 +85,8 @@ public class GameScene extends BaseScene {
         Text levelText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 40, mResourcesManager.menuItemFont, "Level " + mLevel, new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         gameHUD.attachChild(levelText);
 
-        mMovesText = new Text(Constants.SCREEN_WIDTH / 2, 40, mResourcesManager.menuItemFont, "Moves: 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
-        gameHUD.attachChild(mMovesText);
+        mRemainsText = new Text(Constants.SCREEN_WIDTH / 2, 40, mResourcesManager.menuItemFont, "Moves: 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        gameHUD.attachChild(mRemainsText);
 
         mCamera.setHUD(gameHUD);
     }
@@ -102,8 +107,6 @@ public class GameScene extends BaseScene {
             return;
         }
 
-        updateMoves(0);
-
         final int sizeX = mGame.getSizeX();
         final int sizeY = mGame.getSizeY();
 
@@ -116,6 +119,8 @@ public class GameScene extends BaseScene {
 
         mElements = new GameElement[sizeX][sizeY];
 
+        int pieces = 0;
+
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
 
@@ -125,6 +130,7 @@ public class GameScene extends BaseScene {
                 switch (mGame.getElement(new Point(x, y))) {
 
                     case GameMap.EMPTY:
+                        mElements[x][y] = null;
                         attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
                         break;
 
@@ -135,44 +141,56 @@ public class GameScene extends BaseScene {
                             @Override
                             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
-                                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
-                                    this.startX = this.getX();
-                                    this.startY = this.getY();
+
+                                if (mCurrentTouchElement == null) {
+                                    mCurrentTouchElement = this;
+                                }
+
+                                if (mCurrentTouchElement != this) {
+                                    return false;
                                 }
 
                                 this.setPosition(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
 
-
-                                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+                                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP
+                                        || pSceneTouchEvent.getAction() == TouchEvent.ACTION_CANCEL
+                                        || pSceneTouchEvent.getAction() == TouchEvent.ACTION_OUTSIDE) {
                                     checkMove(this);
+
+                                    mCurrentTouchElement = null;
                                 }
+
                                 return true;
                             }
                         };
                         mElements[x][y] = piece;
+                        pieces++;
                         attachChild(piece);
                         registerTouchArea(piece);
                         break;
 
                     default:
+                        mElements[x][y] = null;
                         break;
                 }
             }
+
+            updateRemaining(pieces);
         }
 
         setTouchAreaBindingOnActionDownEnabled(true);
     }
 
-    private void updateMoves(final int i) {
+    private void updateRemaining(final int i) {
 
-        mMoves = i;
-        mMovesText.setText("Moves " + i);
+        mRemaining = i;
+        mRemainsText.setText("Remains " + i);
     }
 
     private void checkMove(GameElement piece) {
 
-        int sourceX = Math.round((piece.startX - mX0)) / mBlockSize;
-        int sourceY = Math.round((piece.startY - mY0)) / mBlockSize;
+        int sourceX = Math.round((piece.lastX - mX0)) / mBlockSize;
+        int sourceY = Math.round((piece.lastY - mY0)) / mBlockSize;
 
         int targetX = Math.round((piece.getX() - mX0)) / mBlockSize;
         int targetY = Math.round((piece.getY() - mY0)) / mBlockSize;
@@ -180,11 +198,18 @@ public class GameScene extends BaseScene {
         Point inter = mGame.computeMovement(new Point(sourceX, sourceY), new Point(targetX, targetY));
 
         if (inter != null) {
+
             int posX = mX0 + targetX * mBlockSize + mBlockSize / 2;
             int posY = mY0 + targetY * mBlockSize + mBlockSize / 2;
             piece.setPosition(posX, posY);
+            piece.lastX = posX;
+            piece.lastY = posY;
 
-            mResourcesManager.menuItemClickedSound.play();
+            GameElement interElement = mElements[inter.x][inter.y];
+            detachChild(interElement);
+            unregisterTouchArea(interElement);
+
+            if (interElement.hasParent()) throw new IllegalArgumentException("expected no parent");
 
             mGame.setElement(new Point(sourceX, sourceY), GameMap.EMPTY);
             mGame.setElement(new Point(targetX, targetY), GameMap.PIECE);
@@ -192,13 +217,15 @@ public class GameScene extends BaseScene {
 
             mElements[sourceX][sourceY] = null;
             mElements[targetX][targetY] = piece;
-            mElements[inter.x][inter.y].detachSelf();
             mElements[inter.x][inter.y] = null;
 
-            updateMoves(mMoves + 1);
+            updateRemaining(mRemaining - 1);
+
+            if (GameManager.getInstance().isMusicEnabled())
+                mResourcesManager.menuItemClickedSound.play();
 
         } else {
-            piece.setPosition(piece.startX, piece.startY);
+            piece.setPosition(piece.lastX, piece.lastY);
         }
     }
 
