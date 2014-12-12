@@ -110,14 +110,7 @@ public class ResourcesManager {
         splashTexture.unload();
     }
 
-    public void loadMenuResources() {
-
-        loadMenuTextures();
-        loadMenuFonts();
-        loadMenuMusics();
-    }
-
-    private void loadMenuFonts() {
+    private void loadGameFonts() {
 
         menuTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 96, true, Color.WHITE, 2, Color.BLACK);
         menuTitleFont.load();
@@ -135,7 +128,7 @@ public class ResourcesManager {
         menuCreditsGrayFont.load();
     }
 
-    private void loadMenuMusics() {
+    private void loadGameMusics() {
 
         try {
             menuItemClickedSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/item_click.ogg");
@@ -144,18 +137,12 @@ public class ResourcesManager {
         }
     }
 
-    public void loadMenuTextures() {
-
-    }
-
-    public void unloadMenuTextures() {
-
-    }
-
 
     public void loadGameResources() {
 
         loadGameTextures();
+        loadGameFonts();
+        loadGameMusics();
     }
 
     private void loadGameTextures() {

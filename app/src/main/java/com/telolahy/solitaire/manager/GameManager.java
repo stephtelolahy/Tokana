@@ -17,6 +17,7 @@ public class GameManager {
     private static final String PREFS_NAME = "preferences";
     private static final String LEVEL_PREFS_KEY = "level";
     private static final String MUSIC_PREFS_KEY = "music";
+    private static final String MAX_LEVEL_PREFS_KEY = "maxLevel";
 
     public static GameManager getInstance() {
         return INSTANCE;
@@ -66,4 +67,14 @@ public class GameManager {
         }
     }
 
+    public int maxScore() {
+        return preferences().getInt(MAX_LEVEL_PREFS_KEY, 0);
+    }
+
+    public void saveMaxScore(int value) {
+
+        SharedPreferences.Editor edit = preferences().edit();
+        edit.putInt(MAX_LEVEL_PREFS_KEY, value);
+        edit.commit();
+    }
 }

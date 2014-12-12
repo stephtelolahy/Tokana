@@ -63,6 +63,7 @@ public class GameScene extends BaseScene {
     private int mMoves;
 
     private Text mScoreText;
+    private Text mBestText;
     private Background mBackground;
 
     public GameScene(int... params) {
@@ -120,8 +121,11 @@ public class GameScene extends BaseScene {
         mHUD.attachChild(mTitle);
         registerTouchArea(mTitle);
 
-        mScoreText = new Text(Constants.SCREEN_WIDTH / 2, 40, mResourcesManager.menuItemFont, "Moves: 0123", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuItemFont, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         mHUD.attachChild(mScoreText);
+
+        mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuItemFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mHUD.attachChild(mBestText);
     }
 
     private void createMenu() {
@@ -260,9 +264,19 @@ public class GameScene extends BaseScene {
     private void updateMoves(final int i) {
 
         mMoves = i;
-        mScoreText.setText("Score " + i);
 
-        mBackground.setColor(new Color((66f + 5 * i) / 256f, (183f - 4 * i) / 256f, (190f - 4 * i) / 256f));
+        int score = i;
+        mScoreText.setText("Score  " + score);
+
+        int savedBest = GameManager.getInstance().maxScore();
+        int best = Math.max(score, savedBest);
+        mBestText.setText("Best  " + best);
+
+        if (best > savedBest) {
+            GameManager.getInstance().saveMaxScore(best);
+        }
+
+//        mBackground.setColor(new Color((66f + 5 * i) / 256f, (183f - 4 * i) / 256f, (190f - 4 * i) / 256f));
     }
 
     private void checkMove(GameElement piece) {
@@ -349,10 +363,5 @@ public class GameScene extends BaseScene {
                 builder.show();
             }
         });
-    }
-
-    private void reloadGame() {
-        this.detachChildren();
-        loadLevel();
     }
 }

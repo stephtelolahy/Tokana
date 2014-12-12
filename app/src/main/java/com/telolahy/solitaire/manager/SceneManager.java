@@ -59,7 +59,6 @@ public class SceneManager {
 
     public void createGameScene(final int level) {
 
-        ResourcesManager.getInstance().loadMenuResources();
         ResourcesManager.getInstance().loadGameResources();
         mGameScene = new GameScene(level);
         mCreditsScene = new CreditsScene();
