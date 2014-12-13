@@ -84,6 +84,7 @@ public class GameScene extends BaseScene {
 
     private Text mScoreText;
     private Text mBestText;
+    private Text mGameOverText;
 
     public GameScene(int... params) {
         super(params);
@@ -146,6 +147,10 @@ public class GameScene extends BaseScene {
         attachChild(mBestText);
 
         attachChild(new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuCreditsGrayFont, mActivity.getResources().getString(R.string.how_to), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager));
+
+        mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont, mActivity.getResources().getString(R.string.game_over), ResourcesManager.getInstance().vertexBufferObjectManager);
+        attachChild(mGameOverText);
+        mGameOverText.setVisible(false);
     }
 
     private void createMenu() {
@@ -339,6 +344,10 @@ public class GameScene extends BaseScene {
             mElements[inter.x][inter.y] = null;
 
             updateMoves(mMoves + 1);
+
+            if (mGame.isGameOver()) {
+                mGameOverText.setVisible(true);
+            }
 
             if (GameManager.getInstance().isMusicEnabled())
                 mResourcesManager.menuItemClickedSound.play();

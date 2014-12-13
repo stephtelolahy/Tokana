@@ -119,6 +119,7 @@ public class ResourcesManager {
     public static final org.andengine.util.adt.color.Color BACKGROUND_COLOR_OBJ = new org.andengine.util.adt.color.Color(231f / 256f, 231f / 256f, 231f / 256f);
     public static final int EMPTY_COLOR = Color.rgb(210, 204, 195);
     public static final int TILE_COLORS[] = {
+
             Color.rgb(234, 227, 217),
             Color.rgb(233, 223, 199),
             Color.rgb(225, 175, 123),

@@ -131,4 +131,14 @@ public class GameMap {
         return false;
     }
 
+    public boolean isGameOver() {
+
+        for (int y = 0; y < mSizeY; y++) {
+            for (int x = 0; x < mSizeX; x++) {
+
+                // TODO: if element(x,y) can move {UP,DOWN,LEFT,RIGHT} return false
+            }
+        }
+        return false;
+    }
 }
