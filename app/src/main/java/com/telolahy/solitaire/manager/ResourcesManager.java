@@ -17,6 +17,7 @@ import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
@@ -58,6 +59,40 @@ public class ResourcesManager {
         }
     }
 
+    public static class TiledTextureDescription {
+
+        protected final String textureFile;
+        protected ITexture texture;
+        public ITiledTextureRegion textureRegion;
+        protected final int columns;
+        protected final int rows;
+
+        public TiledTextureDescription(String file, int col, int row) {
+            textureFile = file;
+            columns = col;
+            rows = row;
+        }
+
+        public void load(TextureManager textureManager, Context context) {
+            try {
+                texture = new AssetBitmapTexture(textureManager, context.getAssets(), textureFile, TextureOptions.BILINEAR);
+                textureRegion = TextureRegionFactory.extractTiledFromTexture(texture, columns, rows);
+                texture.load();
+            } catch (IOException e) {
+                texture = null;
+                textureRegion = null;
+                Debug.e(e);
+            }
+        }
+
+        public void unload() {
+            if (texture != null) {
+                texture.unload();
+            }
+            textureRegion = null;
+        }
+    }
+
     private static final ResourcesManager INSTANCE = new ResourcesManager();
 
     public Engine engine;
@@ -67,7 +102,7 @@ public class ResourcesManager {
 
 
     // splash resources
-    public final TextureDescription splashTexture = new TextureDescription("gfx/splash/creative_games_logo.png");
+    public final TextureDescription splashTexture = new TextureDescription("gfx/splash/logo.png");
 
     // menu resources
     public Font menuItemFont;
@@ -80,8 +115,10 @@ public class ResourcesManager {
 
     // game resources
     public final TextureDescription gameEmptyTexture = new TextureDescription("gfx/game/empty.png");
-    public final TextureDescription gamePieceTexture = new TextureDescription("gfx/game/piece.png");
-    public final TextureDescription gameBackground = new TextureDescription("gfx/game/background.png");
+    public final TiledTextureDescription gamePieceTexture = new TiledTextureDescription("gfx/game/piece.png", 10, 1);
+
+    public static final int EMPTY_COLOR = Color.rgb(210, 204, 195);
+    public static final org.andengine.util.adt.color.Color BACKGROUND_COLOR_OBJ = new org.andengine.util.adt.color.Color(231f / 256f, 231f / 256f, 231f / 256f);
 
 
     //---------------------------------------------
@@ -121,7 +158,7 @@ public class ResourcesManager {
         menuLoadingFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 48, true, Color.rgb(115, 109, 101), 0, Color.TRANSPARENT);
         menuLoadingFont.load();
 
-        menuCreditsWhiteFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(230, 183, 121), 0, Color.TRANSPARENT);
+        menuCreditsWhiteFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 0, Color.TRANSPARENT);
         menuCreditsWhiteFont.load();
 
         menuCreditsGrayFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(182, 172, 169), 0, Color.TRANSPARENT);
@@ -149,13 +186,11 @@ public class ResourcesManager {
 
         gamePieceTexture.load(engine.getTextureManager(), activity);
         gameEmptyTexture.load(engine.getTextureManager(), activity);
-        gameBackground.load(engine.getTextureManager(), activity);
     }
 
     public void unloadGameTextures() {
 
         gamePieceTexture.unload();
         gameEmptyTexture.unload();
-        gameBackground.unload();
     }
 }

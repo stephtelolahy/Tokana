@@ -2,7 +2,9 @@ package com.telolahy.solitaire.scene;
 
 import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
+import com.telolahy.solitaire.manager.ResourcesManager;
 
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
@@ -35,7 +37,7 @@ public class LoadingScene extends BaseScene {
     @Override
     protected void onCreateScene(int... params) {
 
-        setBackground(new SpriteBackground(new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.gameBackground.textureRegion, mVertexBufferObjectManager)));
+        setBackground(new Background(ResourcesManager.BACKGROUND_COLOR_OBJ));
         String text = mActivity.getResources().getString(R.string.loading);
         attachChild(new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.menuLoadingFont, text, mVertexBufferObjectManager));
     }

@@ -24,10 +24,10 @@ public class CreditsScene extends BaseScene {
         setBackground(new Background(new Color(231f / 256f, 231f / 256f, 231f / 256f)));
 
         attachChild(new Text(Constants.SCREEN_WIDTH / 2, 300, mResourcesManager.menuCreditsGrayFont, mActivity.getResources().getString(R.string.game_developer), mVertexBufferObjectManager));
-        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 260, mResourcesManager.menuCreditsWhiteFont, mActivity.getResources().getString(R.string.game_developer_value), mVertexBufferObjectManager));
+        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 260, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.game_developer_value), mVertexBufferObjectManager));
 
         attachChild(new Text(Constants.SCREEN_WIDTH / 2, 200, mResourcesManager.menuCreditsGrayFont, mActivity.getResources().getString(R.string.game_engine), mVertexBufferObjectManager));
-        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 160, mResourcesManager.menuCreditsWhiteFont, mActivity.getResources().getString(R.string.game_engine_value), mVertexBufferObjectManager));
+        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 160, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.game_engine_value), mVertexBufferObjectManager));
 
         try {
             PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);

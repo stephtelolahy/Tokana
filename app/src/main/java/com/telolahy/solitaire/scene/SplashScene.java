@@ -1,12 +1,14 @@
 package com.telolahy.solitaire.scene;
 
 import com.telolahy.solitaire.application.Constants;
+import com.telolahy.solitaire.manager.ResourcesManager;
 import com.telolahy.solitaire.manager.SceneManager;
 
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.SequenceEntityModifier;
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.util.modifier.IModifier;
 
@@ -40,11 +42,12 @@ public class SplashScene extends BaseScene {
     @Override
     protected void onCreateScene(int... params) {
 
+        setBackground(new Background(ResourcesManager.BACKGROUND_COLOR_OBJ));
+
         mBackground = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.splashTexture.textureRegion, mVertexBufferObjectManager);
         attachChild(mBackground);
 
-        mBackground.setAlpha(0);
-        IEntityModifier sequenceModifier = new SequenceEntityModifier(new AlphaModifier(1.f, 0.f, 0.f), new AlphaModifier(1.f, 0.f, 1.f), new AlphaModifier(1.f, 1.f, 1.f));
+        IEntityModifier sequenceModifier = new AlphaModifier(2.f, 1.f, 1.f);
         sequenceModifier.addModifierListener(new IEntityModifier.IEntityModifierListener() {
             @Override
             public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {

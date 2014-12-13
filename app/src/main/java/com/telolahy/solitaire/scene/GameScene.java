@@ -9,6 +9,7 @@ import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
 import com.telolahy.solitaire.core.GameMap;
 import com.telolahy.solitaire.manager.GameManager;
+import com.telolahy.solitaire.manager.ResourcesManager;
 import com.telolahy.solitaire.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.HUD;
@@ -19,10 +20,12 @@ import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -34,15 +37,37 @@ import java.util.ArrayList;
  */
 public class GameScene extends BaseScene {
 
-    static class GameElement extends Sprite {
+    static class GameElement extends TiledSprite {
 
         public float lastX;
         public float lastY;
+        private int mWeight;
 
-        GameElement(final float pX, final float pY, final ITextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
+        private Text mText;
+
+        GameElement(final float pX, final float pY, final ITiledTextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
             super(pX, pY, pTextureRegion, pVertexBufferObjectManager);
             lastX = pX;
             lastY = pY;
+            mWeight = 1;
+
+            mText = new Text(24, 24, ResourcesManager.getInstance().menuCreditsWhiteFont, "0123", ResourcesManager.getInstance().vertexBufferObjectManager);
+            attachChild(mText);
+
+            mText.setText("" + mWeight);
+
+        }
+
+        public int getWeight() {
+            return mWeight;
+        }
+
+        public void updateWeight(int value) {
+            mWeight = value;
+//            int tileIndex = mWeight % getTiledTextureRegion().getTileCount();
+//            setCurrentTileIndex(tileIndex);
+            setColor(ResourcesManager.EMPTY_COLOR);
+            mText.setText("" + mWeight);
         }
     }
 
@@ -98,7 +123,7 @@ public class GameScene extends BaseScene {
 
     private void createBackground() {
 
-        setBackground(new SpriteBackground(new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.gameBackground.textureRegion, mVertexBufferObjectManager)));
+        setBackground(new Background(ResourcesManager.BACKGROUND_COLOR_OBJ));
     }
 
     private void createHUD() {
@@ -127,6 +152,8 @@ public class GameScene extends BaseScene {
 
         mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuCreditsGrayFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mBestText);
+
+        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuCreditsGrayFont, mActivity.getResources().getString(R.string.how_to), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager));
     }
 
     private void createMenu() {
@@ -214,11 +241,15 @@ public class GameScene extends BaseScene {
 
                     case GameMap.EMPTY:
                         mElements[x][y] = null;
-                        attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
+                        Sprite empty  = new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager);
+                        empty.setColor(mResourcesManager.EMPTY_COLOR);
+                        attachChild(empty);
                         break;
 
                     case GameMap.PIECE:
-                        attachChild(new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager));
+                        Sprite full  = new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager);
+                        full.setColor(mResourcesManager.EMPTY_COLOR);
+                        attachChild(full);
 
                         GameElement piece = new GameElement(posX, posY, mResourcesManager.gamePieceTexture.textureRegion, mVertexBufferObjectManager) {
                             @Override
@@ -295,17 +326,17 @@ public class GameScene extends BaseScene {
 
         if (inter != null) {
 
+            GameElement interPiece = mElements[inter.x][inter.y];
+
             int posX = mX0 + targetX * mBlockSize + mBlockSize / 2;
             int posY = mY0 + targetY * mBlockSize + mBlockSize / 2;
             piece.setPosition(posX, posY);
             piece.lastX = posX;
             piece.lastY = posY;
+            piece.updateWeight(piece.getWeight() + interPiece.getWeight());
 
-            GameElement interElement = mElements[inter.x][inter.y];
-            detachChild(interElement);
-            unregisterTouchArea(interElement);
-
-            if (interElement.hasParent()) throw new IllegalArgumentException("expected no parent");
+            detachChild(interPiece);
+            unregisterTouchArea(interPiece);
 
             mGame.setElement(new Point(sourceX, sourceY), GameMap.EMPTY);
             mGame.setElement(new Point(targetX, targetY), GameMap.PIECE);
