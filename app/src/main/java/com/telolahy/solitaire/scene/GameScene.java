@@ -266,6 +266,7 @@ public class GameScene extends BaseScene {
                                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP
                                         || pSceneTouchEvent.getAction() == TouchEvent.ACTION_CANCEL
                                         || pSceneTouchEvent.getAction() == TouchEvent.ACTION_OUTSIDE) {
+
                                     checkMove(this);
 
                                     mCurrentTouchElement = null;
@@ -283,16 +284,15 @@ public class GameScene extends BaseScene {
                         break;
                 }
             }
-
-            updateMoves(0);
         }
 
         for (GameElement piece : pieces) {
             attachChild(piece);
             registerTouchArea(piece);
         }
-
         setTouchAreaBindingOnActionDownEnabled(true);
+
+        updateMoves(0);
     }
 
     private void updateMoves(final int i) {

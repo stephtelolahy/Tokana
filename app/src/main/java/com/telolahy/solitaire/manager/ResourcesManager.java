@@ -45,8 +45,8 @@ public class ResourcesManager {
     public Font menuItemGrayFont;
 
     public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/item_click.ogg");
-    public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/element_move.wav");
-    public final SoundDescription gameElementStaySound = new SoundDescription("mfx/element_stay.wav");
+    public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/element_move.ogg");
+    public final SoundDescription gameElementStaySound = new SoundDescription("mfx/element_stay.ogg");
 
     // game resources
     public final TextureDescription gameEmptyTexture = new TextureDescription("gfx/game/empty.png");

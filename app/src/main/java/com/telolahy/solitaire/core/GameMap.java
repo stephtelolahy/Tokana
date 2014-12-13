@@ -16,15 +16,40 @@ import java.util.ArrayList;
  */
 public class GameMap {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
     public static final char NONE = ' ';
     public static final char EMPTY = 'o';
     public static final char PIECE = 'x';
 
-    private static final int MAP_SIZE = 7;
+    public static final Point UP = new Point(0, 1);
+    public static final Point DOWN = new Point(0, -1);
+    public static final Point LEFT = new Point(-1, 0);
+    public static final Point RIGHT = new Point(1, 0);
 
-    private int mSizeX;
-    private int mSizeY;
-    private char mElement[][];
+    // ===========================================================
+    // Fields
+    // ===========================================================
+
+    private final int mSizeX;
+    private final int mSizeY;
+    private final char mElement[][];
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    private GameMap(int sizeX, int sizeY) {
+        mSizeX = sizeX;
+        mSizeY = sizeY;
+        mElement = new char[sizeX][sizeY];
+    }
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
 
     public int getSizeX() {
         return mSizeX;
@@ -50,14 +75,21 @@ public class GameMap {
         }
     }
 
-    public boolean isValidCoordinate(Point point) {
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
 
-        if (point.x < 0 || point.x > mSizeX - 1 || point.y < 0 || point.y > mSizeY - 1) {
-            return false; // reached limit of he world
-        } else {
-            return true;
-        }
-    }
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
 
     public static GameMap createGame(String file, Context context) {
 
@@ -77,17 +109,13 @@ public class GameMap {
             return null;
         }
 
-        if (lines.size() != MAP_SIZE) {
-            return null;
-        }
-
-        GameMap gameMap = new GameMap(MAP_SIZE, MAP_SIZE);
-        for (int y = 0; y < gameMap.getSizeY(); y++) {
-
-            String line = lines.get(gameMap.getSizeY() - 1 - y);
+        final int maxY = lines.size();
+        final int maxX = maxY;
+        GameMap gameMap = new GameMap(maxX, maxY);
+        for (int y = 0; y < maxY; y++) {
+            String line = lines.get(maxY - 1 - y);
             int lineLength = line.length();
-            for (int x = 0; x < gameMap.getSizeX(); x++) {
-
+            for (int x = 0; x < maxX; x++) {
                 if (x < lineLength) {
                     gameMap.mElement[x][y] = line.charAt(x);
                 } else {
@@ -96,13 +124,6 @@ public class GameMap {
             }
         }
         return gameMap;
-
-    }
-
-    private GameMap(int sizeX, int sizeY) {
-        mSizeX = sizeX;
-        mSizeY = sizeY;
-        mElement = new char[sizeX][sizeY];
     }
 
     public Point computeMovement(Point source, Point destination) {
@@ -128,6 +149,7 @@ public class GameMap {
     }
 
     public boolean isLevelCompleted() {
+        // TODO level completed and remains one piece
         return false;
     }
 
@@ -141,4 +163,26 @@ public class GameMap {
         }
         return false;
     }
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
+
+    private boolean isValidCoordinate(Point point) {
+
+        if (point.x < 0 || point.x > mSizeX - 1 || point.y < 0 || point.y > mSizeY - 1) {
+            return false;   // reached limit of he world
+        }
+
+        if (mElement[point.x][point.y] == NONE) {
+            return false;   // not a place
+        }
+
+        return true;
+    }
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
+
 }
