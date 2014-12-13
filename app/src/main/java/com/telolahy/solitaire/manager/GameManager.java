@@ -12,34 +12,46 @@ import java.io.IOException;
  */
 public class GameManager {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
     private static final GameManager INSTANCE = new GameManager();
 
     private static final String PREFS_NAME = "preferences";
-    private static final String LEVEL_PREFS_KEY = "level";
     private static final String MUSIC_PREFS_KEY = "music";
     private static final String MAX_LEVEL_PREFS_KEY = "maxLevel";
 
+    // ===========================================================
+    // Fields
+    // ===========================================================
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
     public static GameManager getInstance() {
         return INSTANCE;
-    }
-
-    public int maxLevelReached() {
-
-        if (Constants.DEBUG) {
-            return Constants.TOTAL_LEVELS_COUNT + 1;
-        }
-
-        return preferences().getInt(LEVEL_PREFS_KEY, 1);
-    }
-
-    public void setLevelCompleted(int level) {
-
-        int nextLevel = level + 1;
-        if (nextLevel > maxLevelReached()) {
-            SharedPreferences.Editor edit = preferences().edit();
-            edit.putInt(LEVEL_PREFS_KEY, nextLevel);
-            edit.commit();
-        }
     }
 
     public boolean isMusicEnabled() {
@@ -52,21 +64,6 @@ public class GameManager {
         edit.commit();
     }
 
-    private SharedPreferences preferences() {
-
-        return ResourcesManager.getInstance().activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-    }
-
-    public int countLevelsAssetFiles(Context context) {
-
-        try {
-            String[] list = context.getAssets().list("level");
-            return list.length;
-        } catch (IOException e) {
-            return 0;
-        }
-    }
-
     public int maxScore() {
         return preferences().getInt(MAX_LEVEL_PREFS_KEY, 0);
     }
@@ -77,4 +74,20 @@ public class GameManager {
         edit.putInt(MAX_LEVEL_PREFS_KEY, value);
         edit.commit();
     }
+
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
+
+    private SharedPreferences preferences() {
+
+        return ResourcesManager.getInstance().activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
+
+
 }

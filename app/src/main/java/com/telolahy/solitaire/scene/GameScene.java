@@ -32,9 +32,17 @@ import java.util.ArrayList;
  */
 public class GameScene extends BaseScene {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
     private static final int MENU_ITEM_PLAY = 1;
     private static final int MENU_ITEM_SHARE = 2;
     private static final int MENU_ITEM_SOUND = 3;
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
 
     private HUD mHUD;
     private Text mTitle;
@@ -56,9 +64,17 @@ public class GameScene extends BaseScene {
     private Text mGameOverText;
     private Text mCoachMarkerText;
 
-    public GameScene(int... params) {
-        super(params);
-    }
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
 
     @Override
     protected void onCreateScene(int... params) {
@@ -83,6 +99,22 @@ public class GameScene extends BaseScene {
 
         displayExitDialog();
     }
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
 
     private void createBackground() {
 
@@ -174,7 +206,6 @@ public class GameScene extends BaseScene {
         setChildScene(mMenuScene);
 
     }
-
 
     private void loadLevel() {
 
@@ -369,4 +400,9 @@ public class GameScene extends BaseScene {
             }
         });
     }
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
+
 }

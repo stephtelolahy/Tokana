@@ -23,7 +23,27 @@ import java.io.IOException;
  */
 public class MainActivity extends BaseGameActivity {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
+
     private ZoomCamera mCamera;
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
 
     @Override
     public Engine onCreateEngine(EngineOptions pEngineOptions) {
@@ -38,7 +58,6 @@ public class MainActivity extends BaseGameActivity {
         int width = metrics.heightPixels;
         int height = metrics.widthPixels;
         Constants.SCREEN_HEIGHT = height * Constants.SCREEN_WIDTH / width;
-        Constants.TOTAL_LEVELS_COUNT = GameManager.getInstance().countLevelsAssetFiles(this);
 
         mCamera = new ZoomCamera(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         EngineOptions engineOptions = new EngineOptions(true, Constants.SCREEN_ORIENTATION, new FillResolutionPolicy(), mCamera);
@@ -92,4 +111,25 @@ public class MainActivity extends BaseGameActivity {
         super.onResume();
         System.gc();
     }
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
+
 }

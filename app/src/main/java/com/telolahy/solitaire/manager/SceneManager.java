@@ -17,7 +17,16 @@ import org.andengine.ui.IGameInterface;
  */
 public class SceneManager {
 
+
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
     private static final SceneManager INSTANCE = new SceneManager();
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
 
     private Engine mEngine = ResourcesManager.getInstance().engine;
     private BaseScene mCurrentScene;
@@ -26,14 +35,32 @@ public class SceneManager {
     private BaseScene mCreditsScene;
     private BaseScene mGameScene;
 
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
     public static SceneManager getInstance() {
         return INSTANCE;
-    }
-
-    private void setScene(BaseScene scene) {
-
-        mEngine.setScene(scene);
-        mCurrentScene = scene;
     }
 
     public BaseScene getCurrentScene() {
@@ -49,17 +76,10 @@ public class SceneManager {
         pOnCreateSceneCallback.onCreateSceneFinished(mSplashScene);
     }
 
-    private void disposeSplashScene() {
-
-        mSplashScene.disposeScene();
-        mSplashScene = null;
-        ResourcesManager.getInstance().unloadSplashResources();
-    }
-
     public void createGameScene(final int level) {
 
         ResourcesManager.getInstance().loadGameResources();
-        mGameScene = new GameScene(level);
+        mGameScene = new GameScene();
         mCreditsScene = new CreditsScene();
         mLoadingScene = new LoadingScene();
         setScene(mGameScene);
@@ -87,9 +107,31 @@ public class SceneManager {
         mEngine.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback() {
             public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
-                mGameScene = new GameScene(1);
+                mGameScene = new GameScene();
                 setScene(mGameScene);
             }
         }));
     }
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
+
+    private void setScene(BaseScene scene) {
+
+        mEngine.setScene(scene);
+        mCurrentScene = scene;
+    }
+
+    private void disposeSplashScene() {
+
+        mSplashScene.disposeScene();
+        mSplashScene = null;
+        ResourcesManager.getInstance().unloadSplashResources();
+    }
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
+
 }

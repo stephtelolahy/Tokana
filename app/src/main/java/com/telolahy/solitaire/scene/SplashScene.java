@@ -24,8 +24,6 @@ public class SplashScene extends BaseScene {
     // Fields
     // ===========================================================
 
-    private Sprite mBackground;
-
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -43,8 +41,8 @@ public class SplashScene extends BaseScene {
 
         setBackground(new Background(ResourcesManager.BACKGROUND_COLOR_OBJ));
 
-        mBackground = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.splashTexture.textureRegion, mVertexBufferObjectManager);
-        attachChild(mBackground);
+        final Sprite background = new Sprite(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, mResourcesManager.splashTexture.textureRegion, mVertexBufferObjectManager);
+        attachChild(background);
 
         IEntityModifier sequenceModifier = new AlphaModifier(2.f, 1.f, 1.f);
         sequenceModifier.addModifierListener(new IEntityModifier.IEntityModifierListener() {
@@ -58,13 +56,12 @@ public class SplashScene extends BaseScene {
                 SceneManager.getInstance().createGameScene(1);
             }
         });
-        mBackground.registerEntityModifier(sequenceModifier);
+        background.registerEntityModifier(sequenceModifier);
     }
 
     @Override
     protected void onDisposeScene() {
 
-        mBackground.detachSelf();
     }
 
     @Override

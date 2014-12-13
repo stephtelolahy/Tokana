@@ -23,8 +23,15 @@ import java.io.IOException;
  */
 public class ResourcesManager {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
 
     private static final ResourcesManager INSTANCE = new ResourcesManager();
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
 
     public Engine engine;
     public MainActivity activity;
@@ -92,9 +99,29 @@ public class ResourcesManager {
     };
 
 
-    //---------------------------------------------
-    // GETTERS AND SETTERS
-    //---------------------------------------------
+    // ===========================================================
+    // Constructors
+    // ===========================================================
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
 
     public static ResourcesManager getInstance() {
         return INSTANCE;
@@ -117,6 +144,17 @@ public class ResourcesManager {
 
         splashTexture.unload();
     }
+
+    public void loadGameResources() {
+
+        loadGameTextures();
+        loadGameFonts();
+        loadGameMusics();
+    }
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
 
     private void loadGameFonts() {
 
@@ -145,21 +183,13 @@ public class ResourcesManager {
         }
     }
 
-
-    public void loadGameResources() {
-
-        loadGameTextures();
-        loadGameFonts();
-        loadGameMusics();
-    }
-
     private void loadGameTextures() {
 
         gameEmptyTexture.load(engine.getTextureManager(), activity);
     }
 
-    public void unloadGameTextures() {
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
 
-        gameEmptyTexture.unload();
-    }
 }
