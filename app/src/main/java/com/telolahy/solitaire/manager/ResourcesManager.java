@@ -115,10 +115,24 @@ public class ResourcesManager {
 
     // game resources
     public final TextureDescription gameEmptyTexture = new TextureDescription("gfx/game/empty.png");
-    public final TiledTextureDescription gamePieceTexture = new TiledTextureDescription("gfx/game/piece.png", 10, 1);
 
-    public static final int EMPTY_COLOR = Color.rgb(210, 204, 195);
     public static final org.andengine.util.adt.color.Color BACKGROUND_COLOR_OBJ = new org.andengine.util.adt.color.Color(231f / 256f, 231f / 256f, 231f / 256f);
+    public static final int EMPTY_COLOR = Color.rgb(210, 204, 195);
+    public static final int TILE_COLORS[] = {
+            Color.rgb(234, 227, 217),
+            Color.rgb(233, 223, 199),
+            Color.rgb(225, 175, 123),
+            Color.rgb(220, 148, 102),
+            Color.rgb(214, 122, 96),
+            Color.rgb(209, 92, 62),
+            Color.rgb(229, 206, 119),
+            Color.rgb(, , ),
+            Color.rgb(, , ),
+            Color.rgb(, , ),
+            Color.rgb(, , ),
+            Color.rgb(, , ),
+            Color.rgb(, , ),
+    };
 
 
     //---------------------------------------------
@@ -184,13 +198,11 @@ public class ResourcesManager {
 
     private void loadGameTextures() {
 
-        gamePieceTexture.load(engine.getTextureManager(), activity);
         gameEmptyTexture.load(engine.getTextureManager(), activity);
     }
 
     public void unloadGameTextures() {
 
-        gamePieceTexture.unload();
         gameEmptyTexture.unload();
     }
 }

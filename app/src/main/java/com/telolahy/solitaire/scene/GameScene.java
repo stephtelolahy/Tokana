@@ -14,21 +14,17 @@ import com.telolahy.solitaire.manager.SceneManager;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.scene.menu.item.TextMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
-import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.align.HorizontalAlign;
-import org.andengine.util.adt.color.Color;
 
 import java.util.ArrayList;
 
@@ -37,7 +33,7 @@ import java.util.ArrayList;
  */
 public class GameScene extends BaseScene {
 
-    static class GameElement extends TiledSprite {
+    static class GameElement extends Sprite {
 
         public float lastX;
         public float lastY;
@@ -45,17 +41,15 @@ public class GameScene extends BaseScene {
 
         private Text mText;
 
-        GameElement(final float pX, final float pY, final ITiledTextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
+        GameElement(final float pX, final float pY, final ITextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
             super(pX, pY, pTextureRegion, pVertexBufferObjectManager);
             lastX = pX;
             lastY = pY;
-            mWeight = 1;
 
             mText = new Text(24, 24, ResourcesManager.getInstance().menuCreditsWhiteFont, "0123", ResourcesManager.getInstance().vertexBufferObjectManager);
             attachChild(mText);
 
-            mText.setText("" + mWeight);
-
+            updateWeight(1);
         }
 
         public int getWeight() {
@@ -64,10 +58,8 @@ public class GameScene extends BaseScene {
 
         public void updateWeight(int value) {
             mWeight = value;
-//            int tileIndex = mWeight % getTiledTextureRegion().getTileCount();
-//            setCurrentTileIndex(tileIndex);
-            setColor(ResourcesManager.EMPTY_COLOR);
-            mText.setText("" + mWeight);
+            mText.setText("" + value);
+            setColor(ResourcesManager.TILE_COLORS[value % ResourcesManager.TILE_COLORS.length]);
         }
     }
 
@@ -241,17 +233,17 @@ public class GameScene extends BaseScene {
 
                     case GameMap.EMPTY:
                         mElements[x][y] = null;
-                        Sprite empty  = new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager);
+                        Sprite empty = new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager);
                         empty.setColor(mResourcesManager.EMPTY_COLOR);
                         attachChild(empty);
                         break;
 
                     case GameMap.PIECE:
-                        Sprite full  = new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager);
+                        Sprite full = new Sprite(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager);
                         full.setColor(mResourcesManager.EMPTY_COLOR);
                         attachChild(full);
 
-                        GameElement piece = new GameElement(posX, posY, mResourcesManager.gamePieceTexture.textureRegion, mVertexBufferObjectManager) {
+                        GameElement piece = new GameElement(posX, posY, mResourcesManager.gameEmptyTexture.textureRegion, mVertexBufferObjectManager) {
                             @Override
                             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
