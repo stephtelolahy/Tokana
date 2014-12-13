@@ -7,6 +7,7 @@ import android.graphics.Point;
 
 import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
+import com.telolahy.solitaire.core.GameElement;
 import com.telolahy.solitaire.core.GameMap;
 import com.telolahy.solitaire.manager.GameManager;
 import com.telolahy.solitaire.manager.ResourcesManager;
@@ -22,8 +23,6 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
-import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.align.HorizontalAlign;
 
 import java.util.ArrayList;
@@ -32,36 +31,6 @@ import java.util.ArrayList;
  * Created by stephanohuguestelolahy on 11/16/14.
  */
 public class GameScene extends BaseScene {
-
-    static class GameElement extends Sprite {
-
-        public float lastX;
-        public float lastY;
-        private int mWeight;
-
-        private Text mText;
-
-        GameElement(final float pX, final float pY, final ITextureRegion pTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
-            super(pX, pY, pTextureRegion, pVertexBufferObjectManager);
-            lastX = pX;
-            lastY = pY;
-
-            mText = new Text(24, 24, ResourcesManager.getInstance().menuCreditsWhiteFont, "0123", ResourcesManager.getInstance().vertexBufferObjectManager);
-            attachChild(mText);
-
-            updateWeight(1);
-        }
-
-        public int getWeight() {
-            return mWeight;
-        }
-
-        public void updateWeight(int value) {
-            mWeight = value;
-            mText.setText("" + value);
-            setColor(ResourcesManager.TILE_COLORS[value % ResourcesManager.TILE_COLORS.length]);
-        }
-    }
 
     private static final int MENU_ITEM_PLAY = 1;
     private static final int MENU_ITEM_SHARE = 2;
@@ -85,6 +54,7 @@ public class GameScene extends BaseScene {
     private Text mScoreText;
     private Text mBestText;
     private Text mGameOverText;
+    private Text mCoachMarkerText;
 
     public GameScene(int... params) {
         super(params);
@@ -140,17 +110,18 @@ public class GameScene extends BaseScene {
         mHUD.attachChild(mTitle);
         registerTouchArea(mTitle);
 
-        mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuCreditsGrayFont, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuItemGrayFont, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mScoreText);
 
-        mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuCreditsGrayFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuItemGrayFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mBestText);
 
-        attachChild(new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuCreditsGrayFont, mActivity.getResources().getString(R.string.how_to), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager));
+        mCoachMarkerText = new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuItemGrayFont, mActivity.getResources().getString(R.string.how_to), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        attachChild(mCoachMarkerText);
 
         mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont, mActivity.getResources().getString(R.string.game_over), ResourcesManager.getInstance().vertexBufferObjectManager);
-        attachChild(mGameOverText);
         mGameOverText.setVisible(false);
+        attachChild(mGameOverText);
     }
 
     private void createMenu() {
@@ -252,7 +223,6 @@ public class GameScene extends BaseScene {
                             @Override
                             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
-
                                 if (mCurrentTouchElement == null) {
                                     mCurrentTouchElement = this;
                                 }
@@ -313,8 +283,8 @@ public class GameScene extends BaseScene {
 
     private void checkMove(GameElement piece) {
 
-        int sourceX = Math.round((piece.lastX - mX0)) / mBlockSize;
-        int sourceY = Math.round((piece.lastY - mY0)) / mBlockSize;
+        int sourceX = Math.round((piece.getLastX() - mX0)) / mBlockSize;
+        int sourceY = Math.round((piece.getLastY() - mY0)) / mBlockSize;
 
         int targetX = Math.round((piece.getX() - mX0)) / mBlockSize;
         int targetY = Math.round((piece.getY() - mY0)) / mBlockSize;
@@ -328,9 +298,8 @@ public class GameScene extends BaseScene {
             int posX = mX0 + targetX * mBlockSize + mBlockSize / 2;
             int posY = mY0 + targetY * mBlockSize + mBlockSize / 2;
             piece.setPosition(posX, posY);
-            piece.lastX = posX;
-            piece.lastY = posY;
-            piece.updateWeight(piece.getWeight() + interPiece.getWeight());
+            piece.setLastPosition(posX, posY);
+            piece.setWeight(piece.getWeight() + interPiece.getWeight());
 
             detachChild(interPiece);
             unregisterTouchArea(interPiece);
@@ -353,7 +322,7 @@ public class GameScene extends BaseScene {
                 mResourcesManager.menuItemClickedSound.play();
 
         } else {
-            piece.setPosition(piece.lastX, piece.lastY);
+            piece.setPosition(piece.getLastX(), piece.getLastY());
         }
     }
 

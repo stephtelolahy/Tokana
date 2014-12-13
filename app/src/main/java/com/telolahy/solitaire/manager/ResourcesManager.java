@@ -1,9 +1,9 @@
 package com.telolahy.solitaire.manager;
 
-import android.content.Context;
 import android.graphics.Color;
 
 import com.telolahy.solitaire.application.MainActivity;
+import com.telolahy.solitaire.core.TextureDescription;
 
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
@@ -11,14 +11,8 @@ import org.andengine.engine.Engine;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
-import org.andengine.opengl.texture.ITexture;
-import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
-import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
-import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.texture.region.ITiledTextureRegion;
-import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
@@ -29,69 +23,6 @@ import java.io.IOException;
  */
 public class ResourcesManager {
 
-    public static class TextureDescription {
-
-        protected final String textureFile;
-        protected ITexture texture;
-        public ITextureRegion textureRegion;
-
-        public TextureDescription(String file) {
-            textureFile = file;
-        }
-
-        public void load(TextureManager textureManager, Context context) {
-            try {
-                texture = new AssetBitmapTexture(textureManager, context.getAssets(), textureFile, TextureOptions.BILINEAR);
-                textureRegion = TextureRegionFactory.extractFromTexture(texture);
-                texture.load();
-            } catch (IOException e) {
-                texture = null;
-                textureRegion = null;
-                Debug.e(e);
-            }
-        }
-
-        public void unload() {
-            if (texture != null) {
-                texture.unload();
-            }
-            textureRegion = null;
-        }
-    }
-
-    public static class TiledTextureDescription {
-
-        protected final String textureFile;
-        protected ITexture texture;
-        public ITiledTextureRegion textureRegion;
-        protected final int columns;
-        protected final int rows;
-
-        public TiledTextureDescription(String file, int col, int row) {
-            textureFile = file;
-            columns = col;
-            rows = row;
-        }
-
-        public void load(TextureManager textureManager, Context context) {
-            try {
-                texture = new AssetBitmapTexture(textureManager, context.getAssets(), textureFile, TextureOptions.BILINEAR);
-                textureRegion = TextureRegionFactory.extractTiledFromTexture(texture, columns, rows);
-                texture.load();
-            } catch (IOException e) {
-                texture = null;
-                textureRegion = null;
-                Debug.e(e);
-            }
-        }
-
-        public void unload() {
-            if (texture != null) {
-                texture.unload();
-            }
-            textureRegion = null;
-        }
-    }
 
     private static final ResourcesManager INSTANCE = new ResourcesManager();
 
@@ -100,7 +31,6 @@ public class ResourcesManager {
     public ZoomCamera camera;
     public VertexBufferObjectManager vertexBufferObjectManager;
 
-
     // splash resources
     public final TextureDescription splashTexture = new TextureDescription("gfx/splash/logo.png");
 
@@ -108,8 +38,8 @@ public class ResourcesManager {
     public Font menuItemFont;
     public Font menuTitleFont;
     public Font menuLoadingFont;
-    public Font menuCreditsWhiteFont;
-    public Font menuCreditsGrayFont;
+    public Font menuItemWhiteFont;
+    public Font menuItemGrayFont;
 
     public Sound menuItemClickedSound;
 
@@ -199,11 +129,11 @@ public class ResourcesManager {
         menuLoadingFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 48, true, Color.rgb(115, 109, 101), 0, Color.TRANSPARENT);
         menuLoadingFont.load();
 
-        menuCreditsWhiteFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 0, Color.TRANSPARENT);
-        menuCreditsWhiteFont.load();
+        menuItemWhiteFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 0, Color.TRANSPARENT);
+        menuItemWhiteFont.load();
 
-        menuCreditsGrayFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(182, 172, 169), 0, Color.TRANSPARENT);
-        menuCreditsGrayFont.load();
+        menuItemGrayFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(182, 172, 169), 0, Color.TRANSPARENT);
+        menuItemGrayFont.load();
     }
 
     private void loadGameMusics() {

@@ -22,7 +22,6 @@ public class SceneManager {
     private Engine mEngine = ResourcesManager.getInstance().engine;
     private BaseScene mCurrentScene;
     private BaseScene mSplashScene;
-    private BaseScene mMenuScene;
     private BaseScene mLoadingScene;
     private BaseScene mCreditsScene;
     private BaseScene mGameScene;
