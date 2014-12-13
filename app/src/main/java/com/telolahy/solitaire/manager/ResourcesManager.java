@@ -3,10 +3,9 @@ package com.telolahy.solitaire.manager;
 import android.graphics.Color;
 
 import com.telolahy.solitaire.application.MainActivity;
+import com.telolahy.solitaire.core.SoundDescription;
 import com.telolahy.solitaire.core.TextureDescription;
 
-import org.andengine.audio.sound.Sound;
-import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.opengl.font.Font;
@@ -14,9 +13,6 @@ import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.debug.Debug;
-
-import java.io.IOException;
 
 /**
  * Created by stephanohuguestelolahy on 11/15/14.
@@ -48,7 +44,9 @@ public class ResourcesManager {
     public Font menuItemWhiteFont;
     public Font menuItemGrayFont;
 
-    public Sound menuItemClickedSound;
+    public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/item_click.ogg");
+    public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/element_move.wav");
+    public final SoundDescription gameElementStaySound = new SoundDescription("mfx/element_stay.wav");
 
     // game resources
     public final TextureDescription gameEmptyTexture = new TextureDescription("gfx/game/empty.png");
@@ -176,11 +174,9 @@ public class ResourcesManager {
 
     private void loadGameMusics() {
 
-        try {
-            menuItemClickedSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/item_click.ogg");
-        } catch (final IOException e) {
-            Debug.e(e);
-        }
+        menuItemClickedSound.load(engine.getSoundManager(), activity);
+        gameElementMovedSound.load(engine.getSoundManager(), activity);
+        gameElementStaySound.load(engine.getSoundManager(), activity);
     }
 
     private void loadGameTextures() {

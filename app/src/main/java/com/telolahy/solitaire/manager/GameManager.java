@@ -3,10 +3,6 @@ package com.telolahy.solitaire.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.telolahy.solitaire.application.Constants;
-
-import java.io.IOException;
-
 /**
  * Created by stephanohuguestelolahy on 11/25/14.
  */
@@ -54,11 +50,11 @@ public class GameManager {
         return INSTANCE;
     }
 
-    public boolean isMusicEnabled() {
+    public boolean isSoundEnabled() {
         return preferences().getBoolean(MUSIC_PREFS_KEY, true);
     }
 
-    public void setMusicEnabled(boolean value) {
+    public void setSoundEnabled(boolean value) {
         SharedPreferences.Editor edit = preferences().edit();
         edit.putBoolean(MUSIC_PREFS_KEY, value);
         edit.commit();

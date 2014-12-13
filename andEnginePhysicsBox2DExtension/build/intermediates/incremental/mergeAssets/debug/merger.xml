@@ -2,10 +2,10 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="/Users/telolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/src/main/assets" />
+        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/src/main/assets" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="/Users/telolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/src/debug/assets" />
+        <source path="/Users/stephanohuguestelolahy/Documents/Github/Solitaire/andEnginePhysicsBox2DExtension/src/debug/assets" />
     </dataSet>
 
 </merger>

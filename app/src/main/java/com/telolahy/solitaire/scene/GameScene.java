@@ -131,8 +131,7 @@ public class GameScene extends BaseScene {
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 
                 if (pSceneTouchEvent.isActionDown()) {
-                    if (GameManager.getInstance().isMusicEnabled())
-                        mResourcesManager.menuItemClickedSound.play();
+                    mResourcesManager.menuItemClickedSound.play();
                     SceneManager.getInstance().loadCreditsScene();
                 }
                 return true;
@@ -168,7 +167,7 @@ public class GameScene extends BaseScene {
         IMenuItem shareMenuItem = new ScaleMenuItemDecorator(shareTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(shareMenuItem);
 
-        String text = GameManager.getInstance().isMusicEnabled() ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
+        String text = GameManager.getInstance().isSoundEnabled() ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
         final TextMenuItem soundTextMenuItem = new TextMenuItem(MENU_ITEM_SOUND, mResourcesManager.menuItemFont, text, mVertexBufferObjectManager);
         IMenuItem soundMenuItem = new ScaleMenuItemDecorator(soundTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(soundMenuItem);
@@ -184,23 +183,23 @@ public class GameScene extends BaseScene {
             @Override
             public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
 
-                if (GameManager.getInstance().isMusicEnabled())
-                    mResourcesManager.menuItemClickedSound.play();
-
                 switch (pMenuItem.getID()) {
                     case MENU_ITEM_PLAY:
                         SceneManager.getInstance().reloadGameScene();
-                        return true;
+                        break;
                     case MENU_ITEM_SOUND:
-                        boolean soundEnabled = GameManager.getInstance().isMusicEnabled();
+                        boolean soundEnabled = GameManager.getInstance().isSoundEnabled();
                         soundEnabled = !soundEnabled;
                         String text = soundEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
                         soundTextMenuItem.setText(text);
-                        GameManager.getInstance().setMusicEnabled(soundEnabled);
-                        return true;
+                        GameManager.getInstance().setSoundEnabled(soundEnabled);
+                        break;
                     default:
-                        return false;
+                        break;
                 }
+
+                mResourcesManager.menuItemClickedSound.play();
+                return true;
             }
         });
         setChildScene(mMenuScene);
@@ -301,11 +300,11 @@ public class GameScene extends BaseScene {
         mMoves = i;
 
         int score = i;
-        mScoreText.setText("Score  " + score);
+        mScoreText.setText(mActivity.getResources().getString(R.string.scrore) + "  " + score);
 
         int savedBest = GameManager.getInstance().maxScore();
         int best = Math.max(score, savedBest);
-        mBestText.setText("Best  " + best);
+        mBestText.setText(mActivity.getResources().getString(R.string.best) + "  " + best);
 
         if (best > savedBest) {
             GameManager.getInstance().saveMaxScore(best);
@@ -349,11 +348,13 @@ public class GameScene extends BaseScene {
                 mGameOverText.setVisible(true);
             }
 
-            if (GameManager.getInstance().isMusicEnabled())
-                mResourcesManager.menuItemClickedSound.play();
+            mResourcesManager.gameElementMovedSound.play();
 
         } else {
+
             piece.setPosition(piece.getLastX(), piece.getLastY());
+
+            mResourcesManager.gameElementStaySound.play();
         }
     }
 

@@ -3,7 +3,6 @@ package com.telolahy.solitaire.application;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 
-import com.telolahy.solitaire.manager.GameManager;
 import com.telolahy.solitaire.manager.ResourcesManager;
 import com.telolahy.solitaire.manager.SceneManager;
 
