@@ -157,11 +157,12 @@ public class GameMap {
 
         for (int y = 0; y < mSizeY; y++) {
             for (int x = 0; x < mSizeX; x++) {
-
-                // TODO: if element(x,y) can move {UP,DOWN,LEFT,RIGHT} return false
+                if (canMovePiece(new Point(x, y))) {
+                    return false;
+                }
             }
         }
-        return false;
+        return true;
     }
 
     // ===========================================================
@@ -176,6 +177,56 @@ public class GameMap {
 
         if (mElement[point.x][point.y] == NONE) {
             return false;   // not a place
+        }
+
+        return true;
+    }
+
+    private boolean canMovePiece(Point source) {
+
+        if (getElement(source) != PIECE) {
+            return false;
+        }
+
+        if (canMovePieceToDirection(source, UP)) {
+            return true;
+        }
+
+        if (canMovePieceToDirection(source, DOWN)) {
+            return true;
+        }
+
+        if (canMovePieceToDirection(source, LEFT)) {
+            return true;
+        }
+
+        if (canMovePieceToDirection(source, RIGHT)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean canMovePieceToDirection(Point source, Point direction) {
+
+        Point intermediate = new Point(source.x + direction.x, source.y + direction.y);
+
+        if (!isValidCoordinate(intermediate)) {
+            return false;
+        }
+
+        if (getElement(intermediate) != PIECE) {
+            return false;
+        }
+
+        Point destination = new Point(source.x + 2 * direction.x, source.y + 2 * direction.y);
+
+        if (!isValidCoordinate(destination)) {
+            return false;
+        }
+
+        if (getElement(destination) != EMPTY) {
+            return false;
         }
 
         return true;

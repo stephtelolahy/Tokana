@@ -141,6 +141,10 @@ public class GameScene extends BaseScene {
         mHUD.attachChild(mTitle);
         registerTouchArea(mTitle);
 
+        mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont, mActivity.getResources().getString(R.string.game_over), ResourcesManager.getInstance().vertexBufferObjectManager);
+        mGameOverText.setVisible(false);
+        mHUD.attachChild(mGameOverText);
+
         mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuItemGrayFont, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mScoreText);
 
@@ -149,10 +153,6 @@ public class GameScene extends BaseScene {
 
         mCoachMarkerText = new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuItemGrayFont, mActivity.getResources().getString(R.string.how_to), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mCoachMarkerText);
-
-        mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont, mActivity.getResources().getString(R.string.game_over), ResourcesManager.getInstance().vertexBufferObjectManager);
-        mGameOverText.setVisible(false);
-        attachChild(mGameOverText);
     }
 
     private void createMenu() {
