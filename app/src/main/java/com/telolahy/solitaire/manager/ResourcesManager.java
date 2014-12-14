@@ -140,7 +140,7 @@ public class ResourcesManager {
 
     public void loadSplashResources() {
 
-        splashTexture.load(engine.getTextureManager(), activity);
+        splashTexture.load(activity);
     }
 
     public void unloadSplashResources() {
@@ -161,24 +161,24 @@ public class ResourcesManager {
 
     private void loadGameFonts() {
 
-        menuTitleFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
-        menuItemFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
-        menuReplayFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
-        menuLoadingFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
-        menuItemWhiteFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
-        menuItemGrayFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
-        menuHelpFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
+        menuTitleFont.load(activity);
+        menuItemFont.load(activity);
+        menuReplayFont.load(activity);
+        menuLoadingFont.load(activity);
+        menuItemWhiteFont.load(activity);
+        menuItemGrayFont.load(activity);
+        menuHelpFont.load(activity);
     }
 
     private void loadGameMusics() {
 
-        menuItemClickedSound.load(engine.getSoundManager(), activity);
-        gameElementMovedSound.load(engine.getSoundManager(), activity);
+        menuItemClickedSound.load(activity);
+        gameElementMovedSound.load(activity);
     }
 
     private void loadGameTextures() {
 
-        gameEmptyTexture.load(engine.getTextureManager(), activity);
+        gameEmptyTexture.load(activity);
     }
 
     // ===========================================================
