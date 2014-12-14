@@ -3,15 +3,12 @@ package com.telolahy.solitaire.manager;
 import android.graphics.Color;
 
 import com.telolahy.solitaire.application.MainActivity;
-import com.telolahy.solitaire.core.SoundDescription;
-import com.telolahy.solitaire.core.TextureDescription;
+import com.telolahy.utils.resources.FontDescription;
+import com.telolahy.utils.resources.SoundDescription;
+import com.telolahy.utils.resources.TextureDescription;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.ZoomCamera;
-import org.andengine.opengl.font.Font;
-import org.andengine.opengl.font.FontFactory;
-import org.andengine.opengl.texture.TextureOptions;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 /**
@@ -38,13 +35,13 @@ public class ResourcesManager {
     public final TextureDescription splashTexture = new TextureDescription("gfx/splash/logo.png");
 
     // menu resources
-    public Font menuItemFont;
-    public Font menuTitleFont;
-    public Font menuLoadingFont;
-    public Font menuItemWhiteFont;
-    public Font menuItemGrayFont;
-    public Font menuReplayFont;
-    public Font menuHelpFont;
+    public final FontDescription menuTitleFont = new FontDescription("font/ARCADECLASSIC.TTF", 96, Color.TRANSPARENT, 4, Color.rgb(115, 109, 101));
+    public final FontDescription menuItemFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.rgb(230, 183, 121));
+    public final FontDescription menuLoadingFont = new FontDescription("font/ARCADECLASSIC.TTF", 48, Color.rgb(115, 109, 101));
+    public final FontDescription menuItemWhiteFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.WHITE);
+    public final FontDescription menuItemGrayFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.rgb(182, 172, 169));
+    public final FontDescription menuReplayFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.rgb(228, 206, 119));
+    public final FontDescription menuHelpFont = new FontDescription("font/Roboto-Medium.ttf", 15, Color.rgb(182, 172, 169));
 
     public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/item_click.ogg");
     public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/piece_move.mp3");
@@ -157,26 +154,13 @@ public class ResourcesManager {
 
     private void loadGameFonts() {
 
-        menuTitleFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 96, true, Color.TRANSPARENT, 4, Color.rgb(115, 109, 101));
-        menuTitleFont.load();
-
-        menuItemFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(230, 183, 121), 0, Color.TRANSPARENT);
-        menuItemFont.load();
-
-        menuReplayFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(232, 185, 36), 0, Color.TRANSPARENT);
-        menuReplayFont.load();
-
-        menuLoadingFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 48, true, Color.rgb(115, 109, 101), 0, Color.TRANSPARENT);
-        menuLoadingFont.load();
-
-        menuItemWhiteFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.WHITE, 0, Color.TRANSPARENT);
-        menuItemWhiteFont.load();
-
-        menuItemGrayFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(182, 172, 169), 0, Color.TRANSPARENT);
-        menuItemGrayFont.load();
-
-        menuHelpFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 18, true, Color.rgb(182, 172, 169), 0, Color.TRANSPARENT);
-        menuHelpFont.load();
+        menuTitleFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
+        menuItemFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
+        menuReplayFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
+        menuLoadingFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
+        menuItemWhiteFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
+        menuItemGrayFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
+        menuHelpFont.load(activity.getFontManager(), activity.getTextureManager(), activity);
     }
 
     private void loadGameMusics() {

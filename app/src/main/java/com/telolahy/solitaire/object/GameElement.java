@@ -1,4 +1,4 @@
-package com.telolahy.solitaire.core;
+package com.telolahy.solitaire.object;
 
 import com.telolahy.solitaire.manager.ResourcesManager;
 
@@ -22,7 +22,7 @@ public class GameElement extends Sprite {
         mLastX = pX;
         mLastY = pY;
 
-        mText = new Text(24, 24, ResourcesManager.getInstance().menuItemWhiteFont, "0123", ResourcesManager.getInstance().vertexBufferObjectManager);
+        mText = new Text(24, 24, ResourcesManager.getInstance().menuItemWhiteFont.font, "0123", ResourcesManager.getInstance().vertexBufferObjectManager);
         attachChild(mText);
 
         setWeight(1);

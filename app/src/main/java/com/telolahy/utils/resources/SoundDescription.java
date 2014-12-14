@@ -1,4 +1,4 @@
-package com.telolahy.solitaire.core;
+package com.telolahy.utils.resources;
 
 import android.content.Context;
 
@@ -16,17 +16,17 @@ import java.io.IOException;
  */
 public class SoundDescription {
 
-    private final String mSoundFileFile;
+    private final String mSoundFile;
     private Sound mSound;
 
     public SoundDescription(String file) {
-        mSoundFileFile = file;
+        mSoundFile = file;
     }
 
     public void load(SoundManager manager, Context context) {
 
         try {
-            mSound = SoundFactory.createSoundFromAsset(manager, context, mSoundFileFile);
+            mSound = SoundFactory.createSoundFromAsset(manager, context, mSoundFile);
         } catch (final IOException e) {
             mSound = null;
             Debug.e(e);

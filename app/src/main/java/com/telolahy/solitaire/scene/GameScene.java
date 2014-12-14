@@ -7,11 +7,11 @@ import android.graphics.Point;
 
 import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
-import com.telolahy.solitaire.core.GameElement;
-import com.telolahy.solitaire.core.GameMap;
 import com.telolahy.solitaire.manager.GameManager;
 import com.telolahy.solitaire.manager.ResourcesManager;
 import com.telolahy.solitaire.manager.SceneManager;
+import com.telolahy.solitaire.object.GameElement;
+import com.telolahy.solitaire.object.GameMap;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.Background;
@@ -127,7 +127,7 @@ public class GameScene extends BaseScene {
         mHUD = new HUD();
         mCamera.setHUD(mHUD);
 
-        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont, mResourcesManager.activity.getResources().getString(R.string.app_name), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager) {
+        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont.font, mResourcesManager.activity.getResources().getString(R.string.app_name), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 
@@ -142,17 +142,18 @@ public class GameScene extends BaseScene {
         mHUD.attachChild(mTitle);
         registerTouchArea(mTitle);
 
-        mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont, mActivity.getResources().getString(R.string.game_over), ResourcesManager.getInstance().vertexBufferObjectManager);
+        mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont.font, mActivity.getResources().getString(R.string.game_over), ResourcesManager.getInstance().vertexBufferObjectManager);
         mGameOverText.setVisible(false);
         mHUD.attachChild(mGameOverText);
 
-        mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuItemGrayFont, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mScoreText = new Text(Constants.SCREEN_WIDTH / 4, 40, mResourcesManager.menuItemGrayFont.font, "Score0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mScoreText);
 
-        mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuItemGrayFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuItemGrayFont.font, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mBestText);
 
-        mCoachMarkerText = new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuHelpFont, mActivity.getResources().getString(R.string.how_to), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mCoachMarkerText = new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuHelpFont.font, "abcdefghijklmnopqrtuvwxyz01234567890abcdefghijklmnopqrtuvwxyz01234567890", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mCoachMarkerText.setText(mActivity.getResources().getString(R.string.how_to_start));
         attachChild(mCoachMarkerText);
     }
 
@@ -160,16 +161,16 @@ public class GameScene extends BaseScene {
 
         mMenuScene = new MenuScene(mCamera);
 
-        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuReplayFont, mActivity.getResources().getString(R.string.replay), mVertexBufferObjectManager);
+        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuReplayFont.font, mActivity.getResources().getString(R.string.replay), mVertexBufferObjectManager);
         IMenuItem playMenuItem = new ScaleMenuItemDecorator(playTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(playMenuItem);
 
-        TextMenuItem shareTextMenuItem = new TextMenuItem(MENU_ITEM_SHARE, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.share), mVertexBufferObjectManager);
+        TextMenuItem shareTextMenuItem = new TextMenuItem(MENU_ITEM_SHARE, mResourcesManager.menuItemFont.font, mActivity.getResources().getString(R.string.share), mVertexBufferObjectManager);
         IMenuItem shareMenuItem = new ScaleMenuItemDecorator(shareTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(shareMenuItem);
 
         String text = GameManager.getInstance().isSoundEnabled() ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
-        final TextMenuItem soundTextMenuItem = new TextMenuItem(MENU_ITEM_SOUND, mResourcesManager.menuItemFont, text, mVertexBufferObjectManager);
+        final TextMenuItem soundTextMenuItem = new TextMenuItem(MENU_ITEM_SOUND, mResourcesManager.menuItemFont.font, text, mVertexBufferObjectManager);
         IMenuItem soundMenuItem = new ScaleMenuItemDecorator(soundTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(soundMenuItem);
 
@@ -257,6 +258,7 @@ public class GameScene extends BaseScene {
                                 if (!mStarted) {
                                     removePiece(this);
                                     mStarted = true;
+                                    mCoachMarkerText.setText(mActivity.getResources().getString(R.string.how_to_play));
                                     return true;
                                 }
 

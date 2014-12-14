@@ -5,9 +5,9 @@
     <string name="cannot_load_level">Fichier invalide </string>
     <string name="error_loading_level">Erreur</string>
     <string name="close">Fermer</string>
-    <string name="music_on">Musique ON</string>
+    <string name="music_on">Son ON</string>
     <string name="credits">Crédits</string>
-    <string name="music_off">Musique OFF</string>
+    <string name="music_off">Son OFF</string>
     <string name="exit">Quitter</string>
     <string name="exit_message">Êtes vous sûr de vouloir quitter le jeu ?</string>
     <string name="yes">Oui</string>
@@ -24,9 +24,10 @@
     <string name="remind_me_later">Plus tard</string>
     <string name="no_thanks">Non, merci</string>
     <string name="share">Partager</string>
-    <string name="replay">Recommencer</string>
-    <string name="how_to">Liez les nombres jusqu\'à obtenir une case de 36</string>
-    <string name="game_over">Jeu terminé</string>
+    <string name="replay">Rejouer</string>
+    <string name="how_to_play">Liez les nombres jusqu\'à obtenir une case de 36</string>
+    <string name="how_to_start">Tapez sur une case pour commencer</string>
+    <string name="game_over">Vous avez perdu</string>
     <string name="scrore">Score</string>
     <string name="best">Meilleur</string>
 </resources>

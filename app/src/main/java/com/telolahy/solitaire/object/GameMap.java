@@ -1,4 +1,4 @@
-package com.telolahy.solitaire.core;
+package com.telolahy.solitaire.object;
 
 import android.content.Context;
 import android.graphics.Point;

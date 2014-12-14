@@ -25,7 +25,8 @@
     <string name="no_thanks">No, thanks</string>
     <string name="share">Share</string>
     <string name="replay">Restart</string>
-    <string name="how_to">Join the numbers and get to the 36 tile</string>
+    <string name="how_to_play">Join the numbers and get to the 36 tile</string>
+    <string name="how_to_start">Tap on one tile to start</string>
     <string name="game_over">Game Over</string>
     <string name="scrore">Score</string>
     <string name="best">Best</string>

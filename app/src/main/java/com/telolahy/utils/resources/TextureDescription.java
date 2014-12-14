@@ -1,4 +1,4 @@
-package com.telolahy.solitaire.core;
+package com.telolahy.utils.resources;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
-import org.andengine.opengl.texture.region.ITiledTextureRegion;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.util.debug.Debug;
 
@@ -15,25 +15,21 @@ import java.io.IOException;
 /**
  * Created by stephanohuguestelolahy on 12/13/14.
  */
-public class TiledTextureDescription {
+public class TextureDescription {
 
-    public ITiledTextureRegion textureRegion;
+    public ITextureRegion textureRegion;
 
     private final String textureFile;
     private ITexture texture;
-    private final int columns;
-    private final int rows;
 
-    public TiledTextureDescription(String file, int col, int row) {
+    public TextureDescription(String file) {
         textureFile = file;
-        columns = col;
-        rows = row;
     }
 
     public void load(TextureManager textureManager, Context context) {
         try {
             texture = new AssetBitmapTexture(textureManager, context.getAssets(), textureFile, TextureOptions.BILINEAR);
-            textureRegion = TextureRegionFactory.extractTiledFromTexture(texture, columns, rows);
+            textureRegion = TextureRegionFactory.extractFromTexture(texture);
             texture.load();
         } catch (IOException e) {
             texture = null;
