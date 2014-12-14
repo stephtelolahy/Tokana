@@ -58,6 +58,7 @@ public class GameScene extends BaseScene {
 
     private int mLevel;
     private int mMoves;
+    private boolean mStarted;
 
     private Text mScoreText;
     private Text mBestText;
@@ -253,6 +254,12 @@ public class GameScene extends BaseScene {
                             @Override
                             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
+                                if (!mStarted) {
+                                    removePiece(this);
+                                    mStarted = true;
+                                    return true;
+                                }
+
                                 if (mCurrentTouchElement == null) {
                                     mCurrentTouchElement = this;
                                 }
@@ -293,6 +300,7 @@ public class GameScene extends BaseScene {
         setTouchAreaBindingOnActionDownEnabled(true);
 
         updateMoves(0);
+        mStarted = false;
     }
 
     private void updateMoves(final int i) {
@@ -358,6 +366,16 @@ public class GameScene extends BaseScene {
         }
     }
 
+    private void removePiece(GameElement piece) {
+
+        int x = Math.round((piece.getLastX() - mX0)) / mBlockSize;
+        int y = Math.round((piece.getLastY() - mY0)) / mBlockSize;
+        mGame.setElement(new Point(x, y), GameMap.EMPTY);
+        mElements[x][y] = null;
+        detachChild(piece);
+        unregisterTouchArea(piece);
+    }
+    
     private void displayErrorLoadingLevel(final String levelFile) {
 
         mActivity.runOnUiThread(new Runnable() {
