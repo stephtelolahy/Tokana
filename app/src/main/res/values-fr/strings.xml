@@ -25,7 +25,7 @@
     <string name="no_thanks">Non, merci</string>
     <string name="share">Partager</string>
     <string name="replay">Rejouer</string>
-    <string name="how_to_play">Liez les nombres jusqu\'à obtenir une case de 36</string>
+    <string name="how_to_play">Liez les nombres jusqu\'à obtenir une seule case</string>
     <string name="how_to_start">Tapez sur une case pour commencer</string>
     <string name="game_over">Vous avez perdu</string>
     <string name="scrore">Score</string>
