@@ -22,6 +22,13 @@ public class ResourcesManager {
 
     private static final ResourcesManager INSTANCE = new ResourcesManager();
 
+    private final SoundDescription.SoundConditioner sharedSoundConditioner = new SoundDescription.SoundConditioner() {
+        @Override
+        public boolean enableSound() {
+            return GameManager.getInstance().isSoundEnabled();
+        }
+    };
+
     // ===========================================================
     // Fields
     // ===========================================================
@@ -43,8 +50,8 @@ public class ResourcesManager {
     public final FontDescription menuReplayFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.rgb(228, 206, 119));
     public final FontDescription menuHelpFont = new FontDescription("font/Roboto-Medium.ttf", 15, Color.rgb(182, 172, 169));
 
-    public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/item_click.ogg");
-    public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/piece_move.mp3");
+    public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/item_click.ogg", sharedSoundConditioner);
+    public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/piece_move.mp3", sharedSoundConditioner);
 
     // game resources
     public final TextureDescription gameEmptyTexture = new TextureDescription("gfx/game/empty.png");

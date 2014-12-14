@@ -2,8 +2,6 @@ package com.telolahy.utils.resources;
 
 import android.content.Context;
 
-import com.telolahy.solitaire.manager.GameManager;
-
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
 import org.andengine.audio.sound.SoundManager;
@@ -16,11 +14,20 @@ import java.io.IOException;
  */
 public class SoundDescription {
 
+    public interface SoundConditioner {
+
+        boolean enableSound();
+    }
+
     private final String mSoundFile;
+    private final SoundConditioner mSoundConditioner;
     private Sound mSound;
 
-    public SoundDescription(String file) {
+
+    public SoundDescription(String file, SoundConditioner conditioner) {
         mSoundFile = file;
+        mSoundConditioner = conditioner;
+        if (null == conditioner) throw new IllegalArgumentException("invalid conditioner");
     }
 
     public void load(SoundManager manager, Context context) {
@@ -34,8 +41,9 @@ public class SoundDescription {
     }
 
     public void play() {
-        if (mSound != null && GameManager.getInstance().isSoundEnabled()) {
+        if (mSound != null && mSoundConditioner != null && mSoundConditioner.enableSound()) {
             mSound.play();
         }
     }
+
 }
