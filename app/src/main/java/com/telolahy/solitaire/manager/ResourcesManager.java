@@ -47,8 +47,48 @@ public class ResourcesManager {
     public Font menuHelpFont;
 
     public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/item_click.ogg");
-    public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/item_click.ogg");
-    public final SoundDescription gameElementStaySound = new SoundDescription("mfx/element_stay.ogg");
+    public final SoundDescription gameElementMovedSound[] = {
+
+            new SoundDescription("mfx/203458__tesabob2001__a3.mp3"),
+            new SoundDescription("mfx/203459__tesabob2001__a-5.mp3"),
+            new SoundDescription("mfx/203460__tesabob2001__a-4.mp3"),
+            new SoundDescription("mfx/203462__tesabob2001__b4.mp3"),
+            new SoundDescription("mfx/203463__tesabob2001__b3.mp3"),
+            new SoundDescription("mfx/203464__tesabob2001__a5.mp3"),
+            new SoundDescription("mfx/203465__tesabob2001__a4.mp3"),
+            new SoundDescription("mfx/203466__tesabob2001__c-3.mp3"),
+            new SoundDescription("mfx/203467__tesabob2001__b5.mp3"),
+            new SoundDescription("mfx/203468__tesabob2001__f3.mp3"),
+
+            new SoundDescription("mfx/203470__tesabob2001__e3.mp3"),
+            new SoundDescription("mfx/203471__tesabob2001__e4.mp3"),
+            new SoundDescription("mfx/203472__tesabob2001__d4.mp3"),
+            new SoundDescription("mfx/203473__tesabob2001__d5.mp3"),
+            new SoundDescription("mfx/203476__tesabob2001__e5.mp3"),
+            new SoundDescription("mfx/203478__tesabob2001__c4-middle-c.mp3"),
+            new SoundDescription("mfx/203479__tesabob2001__c3.mp3"),
+            new SoundDescription("mfx/203480__tesabob2001__c-5.mp3"),
+            new SoundDescription("mfx/203481__tesabob2001__c-4.mp3"),
+            new SoundDescription("mfx/203482__tesabob2001__d-4.mp3"),
+
+            new SoundDescription("mfx/203483__tesabob2001__d-3.mp3"),
+            new SoundDescription("mfx/203484__tesabob2001__c6.mp3"),
+            new SoundDescription("mfx/203485__tesabob2001__c5.mp3"),
+            new SoundDescription("mfx/203486__tesabob2001__d3.mp3"),
+            new SoundDescription("mfx/203487__tesabob2001__d-5.mp3"),
+            new SoundDescription("mfx/203488__tesabob2001__g-3.mp3"),
+            new SoundDescription("mfx/203489__tesabob2001__f5.mp3"),
+            new SoundDescription("mfx/203490__tesabob2001__g-5.mp3"),
+            new SoundDescription("mfx/203491__tesabob2001__g-4.mp3"),
+            new SoundDescription("mfx/203492__tesabob2001__g4.mp3"),
+
+            new SoundDescription("mfx/203493__tesabob2001__g3.mp3"),
+            new SoundDescription("mfx/203495__tesabob2001__g5.mp3"),
+            new SoundDescription("mfx/203499__tesabob2001__f-5.mp3"),
+            new SoundDescription("mfx/203500__tesabob2001__f-4.mp3"),
+            new SoundDescription("mfx/203501__tesabob2001__f-3.mp3"),
+            new SoundDescription("mfx/203502__tesabob2001__a-3.mp3")
+    };
 
     // game resources
     public final TextureDescription gameEmptyTexture = new TextureDescription("gfx/game/empty.png");
@@ -183,8 +223,9 @@ public class ResourcesManager {
     private void loadGameMusics() {
 
         menuItemClickedSound.load(engine.getSoundManager(), activity);
-        gameElementMovedSound.load(engine.getSoundManager(), activity);
-        gameElementStaySound.load(engine.getSoundManager(), activity);
+        for (SoundDescription sound : gameElementMovedSound) {
+            sound.load(engine.getSoundManager(), activity);
+        }
     }
 
     private void loadGameTextures() {

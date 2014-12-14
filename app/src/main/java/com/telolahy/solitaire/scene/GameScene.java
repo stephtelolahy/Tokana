@@ -361,7 +361,10 @@ public class GameScene extends BaseScene {
 
             piece.setWeight(piece.getWeight() + intermediatePiece.getWeight());
 
-            mResourcesManager.gameElementMovedSound.play();
+            updateMoves(mMoves + 1);
+
+            int soundIndex = mMoves % mResourcesManager.gameElementMovedSound.length;
+            mResourcesManager.gameElementMovedSound[soundIndex].play();
 
             if (mGame.isGameOver()) {
                 mGameOverText.setVisible(true);
@@ -370,7 +373,6 @@ public class GameScene extends BaseScene {
         } else {
 
             piece.setPosition(piece.getLastX(), piece.getLastY());
-            mResourcesManager.gameElementStaySound.play();
         }
     }
 
