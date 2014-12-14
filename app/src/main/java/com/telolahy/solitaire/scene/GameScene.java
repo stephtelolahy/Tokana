@@ -7,11 +7,11 @@ import android.graphics.Point;
 
 import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
+import com.telolahy.solitaire.core.GameElement;
+import com.telolahy.solitaire.core.GameMap;
 import com.telolahy.solitaire.manager.GameManager;
 import com.telolahy.solitaire.manager.ResourcesManager;
 import com.telolahy.solitaire.manager.SceneManager;
-import com.telolahy.solitaire.core.GameElement;
-import com.telolahy.solitaire.core.GameMap;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.Background;
@@ -142,7 +142,7 @@ public class GameScene extends BaseScene {
         mHUD.attachChild(mTitle);
         registerTouchArea(mTitle);
 
-        mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont.font, mActivity.getResources().getString(R.string.game_over), ResourcesManager.getInstance().vertexBufferObjectManager);
+        mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont.font, "abcdefghijklmnopqrtuvwxyz01234567890abcdefghijklmnopqrtuvwxyz01234567890", ResourcesManager.getInstance().vertexBufferObjectManager);
         mGameOverText.setVisible(false);
         mHUD.attachChild(mGameOverText);
 
@@ -363,11 +363,17 @@ public class GameScene extends BaseScene {
 
             piece.setWeight(piece.getWeight() + intermediatePiece.getWeight());
 
-            updateMoves(mMoves + 1);
-
             mResourcesManager.gameElementMovedSound.play();
 
+            updateMoves(mMoves + 1);
+
             if (mGame.isGameOver()) {
+
+                if (mGame.isLevelCompleted()) {
+                    mGameOverText.setText(mActivity.getString(R.string.level_completed));
+                } else {
+                    mGameOverText.setText(mActivity.getString(R.string.game_over));
+                }
                 mGameOverText.setVisible(true);
             }
 

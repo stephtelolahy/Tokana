@@ -152,8 +152,16 @@ public class GameMap {
     }
 
     public boolean isLevelCompleted() {
-        // TODO level completed and remains one piece
-        return false;
+
+        int nbPiece = 0;
+        for (int y = 0; y < mSizeY; y++) {
+            for (int x = 0; x < mSizeX; x++) {
+                if (getElement(new Point(x, y)) == PIECE) {
+                    nbPiece++;
+                }
+            }
+        }
+        return nbPiece == 1;
     }
 
     public boolean isGameOver() {
