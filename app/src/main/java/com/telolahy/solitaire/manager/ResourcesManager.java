@@ -43,6 +43,8 @@ public class ResourcesManager {
     public Font menuLoadingFont;
     public Font menuItemWhiteFont;
     public Font menuItemGrayFont;
+    public Font menuReplayFont;
+    public Font menuHelpFont;
 
     public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/item_click.ogg");
     public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/item_click.ogg");
@@ -162,6 +164,9 @@ public class ResourcesManager {
         menuItemFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(230, 183, 121), 0, Color.TRANSPARENT);
         menuItemFont.load();
 
+        menuReplayFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(232, 185, 36), 0, Color.TRANSPARENT);
+        menuReplayFont.load();
+
         menuLoadingFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 48, true, Color.rgb(115, 109, 101), 0, Color.TRANSPARENT);
         menuLoadingFont.load();
 
@@ -170,6 +175,9 @@ public class ResourcesManager {
 
         menuItemGrayFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 24, true, Color.rgb(182, 172, 169), 0, Color.TRANSPARENT);
         menuItemGrayFont.load();
+
+        menuHelpFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA), activity.getAssets(), "font/font.ttf", 18, true, Color.rgb(182, 172, 169), 0, Color.TRANSPARENT);
+        menuHelpFont.load();
     }
 
     private void loadGameMusics() {

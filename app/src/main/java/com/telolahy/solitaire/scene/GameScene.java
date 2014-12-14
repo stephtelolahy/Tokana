@@ -152,7 +152,7 @@ public class GameScene extends BaseScene {
         mBestText = new Text(Constants.SCREEN_WIDTH * 3 / 4, 40, mResourcesManager.menuItemGrayFont, "Best0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mBestText);
 
-        mCoachMarkerText = new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuItemGrayFont, mActivity.getResources().getString(R.string.how_to), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
+        mCoachMarkerText = new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuHelpFont, mActivity.getResources().getString(R.string.how_to), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
         attachChild(mCoachMarkerText);
     }
 
@@ -160,7 +160,7 @@ public class GameScene extends BaseScene {
 
         mMenuScene = new MenuScene(mCamera);
 
-        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuItemFont, mActivity.getResources().getString(R.string.replay), mVertexBufferObjectManager);
+        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuReplayFont, mActivity.getResources().getString(R.string.replay), mVertexBufferObjectManager);
         IMenuItem playMenuItem = new ScaleMenuItemDecorator(playTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(playMenuItem);
 
