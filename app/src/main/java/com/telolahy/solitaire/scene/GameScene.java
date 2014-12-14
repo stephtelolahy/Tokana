@@ -363,8 +363,7 @@ public class GameScene extends BaseScene {
 
             updateMoves(mMoves + 1);
 
-            int soundIndex = mMoves % mResourcesManager.gameElementMovedSound.length;
-            mResourcesManager.gameElementMovedSound[soundIndex].play();
+            mResourcesManager.gameElementMovedSound.play();
 
             if (mGame.isGameOver()) {
                 mGameOverText.setVisible(true);
