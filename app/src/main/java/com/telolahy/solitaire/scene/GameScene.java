@@ -321,47 +321,55 @@ public class GameScene extends BaseScene {
 
     private void checkMove(GameElement piece) {
 
+        float dX = piece.getX() - piece.getLastX();
+        float dY = piece.getY() - piece.getLastY();
+        Point direction = null;
+        if (Math.abs(dX) > Math.abs(dY)) {
+            if (dX > 0) {
+                direction = GameMap.RIGHT;
+            } else {
+                direction = GameMap.LEFT;
+            }
+        } else {
+            if (dY > 0) {
+                direction = GameMap.UP;
+            } else {
+                direction = GameMap.DOWN;
+            }
+        }
+
         int sourceX = Math.round((piece.getLastX() - mX0)) / mBlockSize;
         int sourceY = Math.round((piece.getLastY() - mY0)) / mBlockSize;
 
-        int targetX = Math.round((piece.getX() - mX0)) / mBlockSize;
-        int targetY = Math.round((piece.getY() - mY0)) / mBlockSize;
+        if (mGame.canMovePieceToDirection(new Point(sourceX, sourceY), direction)) {
 
-        Point inter = mGame.computeMovement(new Point(sourceX, sourceY), new Point(targetX, targetY));
+            int intermediateX = sourceX + direction.x;
+            int intermediateY = sourceY + direction.y;
+            GameElement intermediatePiece = mElements[intermediateX][intermediateY];
+            removePiece(intermediatePiece);
 
-        if (inter != null) {
-
-            GameElement interPiece = mElements[inter.x][inter.y];
-
-            int posX = mX0 + targetX * mBlockSize + mBlockSize / 2;
-            int posY = mY0 + targetY * mBlockSize + mBlockSize / 2;
+            int destinationX = sourceX + 2 * direction.x;
+            int destinationY = sourceY + 2 * direction.y;
+            int posX = mX0 + destinationX * mBlockSize + mBlockSize / 2;
+            int posY = mY0 + destinationY * mBlockSize + mBlockSize / 2;
             piece.setPosition(posX, posY);
             piece.setLastPosition(posX, posY);
-            piece.setWeight(piece.getWeight() + interPiece.getWeight());
-
-            detachChild(interPiece);
-            unregisterTouchArea(interPiece);
-
             mGame.setElement(new Point(sourceX, sourceY), GameMap.EMPTY);
-            mGame.setElement(new Point(targetX, targetY), GameMap.PIECE);
-            mGame.setElement(inter, GameMap.EMPTY);
-
+            mGame.setElement(new Point(destinationX, destinationY), GameMap.PIECE);
             mElements[sourceX][sourceY] = null;
-            mElements[targetX][targetY] = piece;
-            mElements[inter.x][inter.y] = null;
+            mElements[destinationX][destinationY] = piece;
 
-            updateMoves(mMoves + 1);
+            piece.setWeight(piece.getWeight() + intermediatePiece.getWeight());
+
+            mResourcesManager.gameElementMovedSound.play();
 
             if (mGame.isGameOver()) {
                 mGameOverText.setVisible(true);
             }
 
-            mResourcesManager.gameElementMovedSound.play();
-
         } else {
 
             piece.setPosition(piece.getLastX(), piece.getLastY());
-
             mResourcesManager.gameElementStaySound.play();
         }
     }
@@ -375,7 +383,7 @@ public class GameScene extends BaseScene {
         detachChild(piece);
         unregisterTouchArea(piece);
     }
-    
+
     private void displayErrorLoadingLevel(final String levelFile) {
 
         mActivity.runOnUiThread(new Runnable() {

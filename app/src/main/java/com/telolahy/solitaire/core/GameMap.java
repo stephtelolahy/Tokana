@@ -126,26 +126,29 @@ public class GameMap {
         return gameMap;
     }
 
-    public Point computeMovement(Point source, Point destination) {
+    public boolean canMovePieceToDirection(Point source, Point direction) {
+
+        Point intermediate = new Point(source.x + direction.x, source.y + direction.y);
+
+        if (!isValidCoordinate(intermediate)) {
+            return false;
+        }
+
+        if (getElement(intermediate) != PIECE) {
+            return false;
+        }
+
+        Point destination = new Point(source.x + 2 * direction.x, source.y + 2 * direction.y);
+
+        if (!isValidCoordinate(destination)) {
+            return false;
+        }
 
         if (getElement(destination) != EMPTY) {
-            return null;
+            return false;
         }
 
-        int dx = destination.x - source.x;
-        int dy = destination.y - source.y;
-
-        if (!(dx == 0 && Math.abs(dy) == 2) && !(dy == 0 && Math.abs(dx) == 2)) {
-            return null;
-        }
-
-        Point inter = new Point(source.x + dx / 2, source.y + dy / 2);
-
-        if (getElement(inter) != PIECE) {
-            return null;
-        }
-
-        return inter;
+        return true;
     }
 
     public boolean isLevelCompleted() {
@@ -205,31 +208,6 @@ public class GameMap {
         }
 
         return false;
-    }
-
-    private boolean canMovePieceToDirection(Point source, Point direction) {
-
-        Point intermediate = new Point(source.x + direction.x, source.y + direction.y);
-
-        if (!isValidCoordinate(intermediate)) {
-            return false;
-        }
-
-        if (getElement(intermediate) != PIECE) {
-            return false;
-        }
-
-        Point destination = new Point(source.x + 2 * direction.x, source.y + 2 * direction.y);
-
-        if (!isValidCoordinate(destination)) {
-            return false;
-        }
-
-        if (getElement(destination) != EMPTY) {
-            return false;
-        }
-
-        return true;
     }
 
     // ===========================================================
