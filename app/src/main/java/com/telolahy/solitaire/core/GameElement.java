@@ -1,4 +1,4 @@
-package com.telolahy.solitaire.object;
+package com.telolahy.solitaire.core;
 
 import com.telolahy.solitaire.manager.ResourcesManager;
 

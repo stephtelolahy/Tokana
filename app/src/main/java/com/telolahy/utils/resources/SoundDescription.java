@@ -27,7 +27,6 @@ public class SoundDescription {
     public SoundDescription(String file, SoundConditioner conditioner) {
         mSoundFile = file;
         mSoundConditioner = conditioner;
-        if (null == conditioner) throw new IllegalArgumentException("invalid conditioner");
     }
 
     public void load(SoundManager manager, Context context) {
@@ -41,7 +40,7 @@ public class SoundDescription {
     }
 
     public void play() {
-        if (mSound != null && mSoundConditioner != null && mSoundConditioner.enableSound()) {
+        if (mSound != null && (mSoundConditioner == null || mSoundConditioner.enableSound())) {
             mSound.play();
         }
     }

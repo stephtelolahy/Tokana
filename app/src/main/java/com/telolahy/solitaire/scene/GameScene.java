@@ -10,8 +10,8 @@ import com.telolahy.solitaire.application.Constants;
 import com.telolahy.solitaire.manager.GameManager;
 import com.telolahy.solitaire.manager.ResourcesManager;
 import com.telolahy.solitaire.manager.SceneManager;
-import com.telolahy.solitaire.object.GameElement;
-import com.telolahy.solitaire.object.GameMap;
+import com.telolahy.solitaire.core.GameElement;
+import com.telolahy.solitaire.core.GameMap;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.Background;
