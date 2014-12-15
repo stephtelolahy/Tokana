@@ -84,7 +84,7 @@ public class SceneManager {
         mLoadingScene = new LoadingScene();
         setScene(mGameScene);
         disposeSplashScene();
-        AppRater.app_launched(ResourcesManager.getInstance().activity);
+        AppRater.checkAppLaunched();
     }
 
     public void loadCreditsScene() {
