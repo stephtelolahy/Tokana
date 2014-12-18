@@ -45,12 +45,12 @@ public class GameScene extends BaseScene {
     // ===========================================================
 
     private HUD mHUD;
-    private Text mTitle;
-    private MenuScene mMenuScene;
+    private Text mTitleText;
 
-    TextMenuItem mPlayTextMenuItem;
-    TextMenuItem mSoundTextMenuItem;
-    TextMenuItem mShareTextMenuItem;
+    private MenuScene mMenuScene;
+    private TextMenuItem mPlayTextMenuItem;
+    private TextMenuItem mSoundTextMenuItem;
+    private TextMenuItem mShareTextMenuItem;
 
     private GameMap mGame;
     private GameElement[][] mElements;
@@ -129,7 +129,7 @@ public class GameScene extends BaseScene {
         mHUD = new HUD();
         mCamera.setHUD(mHUD);
 
-        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont.font, "abcdefghijklmnopqrstuvwxyz0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager) {
+        mTitleText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont.font, "abcdefghijklmnopqrstuvwxyz0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 
@@ -140,10 +140,10 @@ public class GameScene extends BaseScene {
                 return true;
             }
         };
-        mTitle.setText(mResourcesManager.activity.getString(R.string.app_name));
+        mTitleText.setText(mResourcesManager.activity.getString(R.string.app_name));
 
-        mHUD.attachChild(mTitle);
-        registerTouchArea(mTitle);
+        mHUD.attachChild(mTitleText);
+        registerTouchArea(mTitleText);
 
         mGameOverText = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, ResourcesManager.getInstance().menuLoadingFont.font, "abcdefghijklmnopqrtuvwxyz01234567890abcdefghijklmnopqrtuvwxyz01234567890", ResourcesManager.getInstance().vertexBufferObjectManager);
         mGameOverText.setVisible(false);
@@ -218,7 +218,7 @@ public class GameScene extends BaseScene {
         if (GameManager.getInstance().isTraining()) {
             mReady = true;
             mCoachMarkerText.setText(mActivity.getString(R.string.how_to_play));
-            mTitle.setText(mActivity.getString(R.string.training));
+            mTitleText.setText(mActivity.getString(R.string.training));
             levelFile = "level/training.txt";
         } else {
             mReady = false;
