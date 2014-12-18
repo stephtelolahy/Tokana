@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Uno</string>
+    <string name="app_name">Solitaire</string>
     <string name="loading">Chargement ...</string>
     <string name="level_completed">Bravo !</string>
     <string name="cannot_load_level">Fichier invalide </string>
@@ -30,4 +30,6 @@
     <string name="game_over">Vous avez perdu</string>
     <string name="scrore">Score</string>
     <string name="best">Meilleur</string>
+    <string name="next">Continuer</string>
+    <string name="training">Comment jouer ?</string>
 </resources>

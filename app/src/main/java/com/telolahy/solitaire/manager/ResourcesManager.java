@@ -42,7 +42,7 @@ public class ResourcesManager {
     public final TextureDescription splashTexture = new TextureDescription("gfx/splash/logo.png");
 
     // menu resources
-    public final FontDescription menuTitleFont = new FontDescription("font/ARCADECLASSIC.TTF", 96, Color.TRANSPARENT, 4, Color.rgb(115, 109, 101));
+    public final FontDescription menuTitleFont = new FontDescription("font/Roboto-Medium.ttf", 54, Color.rgb(230, 183, 121), 0, Color.TRANSPARENT);
     public final FontDescription menuItemFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.rgb(230, 183, 121));
     public final FontDescription menuLoadingFont = new FontDescription("font/ARCADECLASSIC.TTF", 48, Color.rgb(115, 109, 101));
     public final FontDescription menuItemWhiteFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.WHITE);

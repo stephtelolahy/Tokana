@@ -48,6 +48,10 @@ public class GameScene extends BaseScene {
     private Text mTitle;
     private MenuScene mMenuScene;
 
+    TextMenuItem mPlayTextMenuItem;
+    TextMenuItem mSoundTextMenuItem;
+    TextMenuItem mShareTextMenuItem;
+
     private GameMap mGame;
     private GameElement[][] mElements;
     private GameElement mCurrentTouchElement;
@@ -56,9 +60,8 @@ public class GameScene extends BaseScene {
     private int mY0;
     private int mBlockSize;
 
-    private int mLevel;
     private int mMoves;
-    private boolean mStarted;
+    private boolean mReady;
 
     private Text mScoreText;
     private Text mBestText;
@@ -80,7 +83,6 @@ public class GameScene extends BaseScene {
     @Override
     protected void onCreateScene(int... params) {
 
-        mLevel = 1;
         createBackground();
         createHUD();
         createMenu();
@@ -127,7 +129,7 @@ public class GameScene extends BaseScene {
         mHUD = new HUD();
         mCamera.setHUD(mHUD);
 
-        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont.font, mResourcesManager.activity.getResources().getString(R.string.app_name), new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager) {
+        mTitle = new Text(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT - 50, mResourcesManager.menuTitleFont.font, "abcdefghijklmnopqrstuvwxyz0123456789", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 
@@ -138,6 +140,7 @@ public class GameScene extends BaseScene {
                 return true;
             }
         };
+        mTitle.setText(mResourcesManager.activity.getString(R.string.app_name));
 
         mHUD.attachChild(mTitle);
         registerTouchArea(mTitle);
@@ -153,7 +156,7 @@ public class GameScene extends BaseScene {
         attachChild(mBestText);
 
         mCoachMarkerText = new Text(Constants.SCREEN_WIDTH / 2, 80, mResourcesManager.menuHelpFont.font, "abcdefghijklmnopqrtuvwxyz01234567890abcdefghijklmnopqrtuvwxyz01234567890", new TextOptions(HorizontalAlign.CENTER), mVertexBufferObjectManager);
-        mCoachMarkerText.setText(mActivity.getResources().getString(R.string.how_to_start));
+        mCoachMarkerText.setText(mActivity.getString(R.string.how_to_start));
         attachChild(mCoachMarkerText);
     }
 
@@ -161,17 +164,18 @@ public class GameScene extends BaseScene {
 
         mMenuScene = new MenuScene(mCamera);
 
-        TextMenuItem playTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuReplayFont.font, mActivity.getResources().getString(R.string.replay), mVertexBufferObjectManager);
-        IMenuItem playMenuItem = new ScaleMenuItemDecorator(playTextMenuItem, 1.2f, 1);
+        mPlayTextMenuItem = new TextMenuItem(MENU_ITEM_PLAY, mResourcesManager.menuReplayFont.font, "abcdefghijklmnopqrtuvwxyz01234567890abcdefghijkl", mVertexBufferObjectManager);
+        mPlayTextMenuItem.setText(mActivity.getString(R.string.replay));
+        IMenuItem playMenuItem = new ScaleMenuItemDecorator(mPlayTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(playMenuItem);
 
-        TextMenuItem shareTextMenuItem = new TextMenuItem(MENU_ITEM_SHARE, mResourcesManager.menuItemFont.font, mActivity.getResources().getString(R.string.share), mVertexBufferObjectManager);
-        IMenuItem shareMenuItem = new ScaleMenuItemDecorator(shareTextMenuItem, 1.2f, 1);
+        mShareTextMenuItem = new TextMenuItem(MENU_ITEM_SHARE, mResourcesManager.menuItemFont.font, mActivity.getString(R.string.share), mVertexBufferObjectManager);
+        IMenuItem shareMenuItem = new ScaleMenuItemDecorator(mShareTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(shareMenuItem);
 
-        String text = GameManager.getInstance().isSoundEnabled() ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
-        final TextMenuItem soundTextMenuItem = new TextMenuItem(MENU_ITEM_SOUND, mResourcesManager.menuItemFont.font, text, mVertexBufferObjectManager);
-        IMenuItem soundMenuItem = new ScaleMenuItemDecorator(soundTextMenuItem, 1.2f, 1);
+        String text = GameManager.getInstance().isSoundEnabled() ? mActivity.getString(R.string.music_on) : mActivity.getString(R.string.music_off);
+        mSoundTextMenuItem = new TextMenuItem(MENU_ITEM_SOUND, mResourcesManager.menuItemFont.font, text, mVertexBufferObjectManager);
+        IMenuItem soundMenuItem = new ScaleMenuItemDecorator(mSoundTextMenuItem, 1.2f, 1);
         mMenuScene.addMenuItem(soundMenuItem);
 
         mMenuScene.buildAnimations();
@@ -192,8 +196,8 @@ public class GameScene extends BaseScene {
                     case MENU_ITEM_SOUND:
                         boolean soundEnabled = GameManager.getInstance().isSoundEnabled();
                         soundEnabled = !soundEnabled;
-                        String text = soundEnabled ? mActivity.getResources().getString(R.string.music_on) : mActivity.getResources().getString(R.string.music_off);
-                        soundTextMenuItem.setText(text);
+                        String text = soundEnabled ? mActivity.getString(R.string.music_on) : mActivity.getString(R.string.music_off);
+                        mSoundTextMenuItem.setText(text);
                         GameManager.getInstance().setSoundEnabled(soundEnabled);
                         break;
                     default:
@@ -210,7 +214,16 @@ public class GameScene extends BaseScene {
 
     private void loadLevel() {
 
-        String levelFile = "level/level" + mLevel + ".txt";
+        String levelFile;
+        if (GameManager.getInstance().isTraining()) {
+            mReady = true;
+            mCoachMarkerText.setText(mActivity.getString(R.string.how_to_play));
+            mTitle.setText(mActivity.getString(R.string.training));
+            levelFile = "level/training.txt";
+        } else {
+            mReady = false;
+            levelFile = "level/level1.txt";
+        }
         mGame = GameMap.createGame(levelFile, mActivity);
 
         if (mGame == null) {
@@ -255,10 +268,10 @@ public class GameScene extends BaseScene {
                             @Override
                             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 
-                                if (!mStarted) {
+                                if (!mReady) {
                                     removePiece(this);
-                                    mStarted = true;
-                                    mCoachMarkerText.setText(mActivity.getResources().getString(R.string.how_to_play));
+                                    mReady = true;
+                                    mCoachMarkerText.setText(mActivity.getString(R.string.how_to_play));
                                     return true;
                                 }
 
@@ -301,8 +314,8 @@ public class GameScene extends BaseScene {
         }
         setTouchAreaBindingOnActionDownEnabled(true);
 
+        mPlayTextMenuItem.setText(mActivity.getString(R.string.replay));
         updateMoves(0);
-        mStarted = false;
     }
 
     private void updateMoves(final int i) {
@@ -310,11 +323,11 @@ public class GameScene extends BaseScene {
         mMoves = i;
 
         int score = i;
-        mScoreText.setText(mActivity.getResources().getString(R.string.scrore) + "  " + score);
+        mScoreText.setText(mActivity.getString(R.string.scrore) + "  " + score);
 
         int savedBest = GameManager.getInstance().maxScore();
         int best = Math.max(score, savedBest);
-        mBestText.setText(mActivity.getResources().getString(R.string.best) + "  " + best);
+        mBestText.setText(mActivity.getString(R.string.best) + "  " + best);
 
         if (best > savedBest) {
             GameManager.getInstance().saveMaxScore(best);
@@ -370,9 +383,12 @@ public class GameScene extends BaseScene {
             if (mGame.isGameOver()) {
 
                 if (mGame.isLevelCompleted()) {
+                    GameManager.getInstance().setTraining(false);
                     mGameOverText.setText(mActivity.getString(R.string.level_completed));
+                    mPlayTextMenuItem.setText(mActivity.getString(R.string.next));
                 } else {
                     mGameOverText.setText(mActivity.getString(R.string.game_over));
+                    mPlayTextMenuItem.setText(mActivity.getString(R.string.replay));
                 }
                 mGameOverText.setVisible(true);
             }
@@ -398,9 +414,9 @@ public class GameScene extends BaseScene {
         mActivity.runOnUiThread(new Runnable() {
             public void run() {
 
-                String title = mActivity.getResources().getString(R.string.error_loading_level);
-                String message = mActivity.getResources().getString(R.string.cannot_load_level) + ": " + levelFile;
-                String positiveText = mActivity.getResources().getString(R.string.close);
+                String title = mActivity.getString(R.string.error_loading_level);
+                String message = mActivity.getString(R.string.cannot_load_level) + ": " + levelFile;
+                String positiveText = mActivity.getString(R.string.close);
                 AlertDialog.Builder ad = new AlertDialog.Builder(mActivity);
                 ad.setTitle(title);
                 ad.setMessage(message);
@@ -421,16 +437,16 @@ public class GameScene extends BaseScene {
             public void run() {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setTitle(mResourcesManager.activity.getResources().getString(R.string.exit));
-                builder.setMessage(mResourcesManager.activity.getResources().getString(R.string.exit_message));
-                builder.setPositiveButton((mResourcesManager.activity.getResources().getString(R.string.yes)), new DialogInterface.OnClickListener() {
+                builder.setTitle(mResourcesManager.activity.getString(R.string.exit));
+                builder.setMessage(mResourcesManager.activity.getString(R.string.exit_message));
+                builder.setPositiveButton((mResourcesManager.activity.getString(R.string.yes)), new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.exit(0);
                     }
                 });
-                builder.setNegativeButton(mResourcesManager.activity.getResources().getString(R.string.no), null);
+                builder.setNegativeButton(mResourcesManager.activity.getString(R.string.no), null);
                 builder.setCancelable(false);
                 builder.show();
             }

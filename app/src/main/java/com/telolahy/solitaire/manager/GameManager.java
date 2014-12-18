@@ -14,9 +14,12 @@ public class GameManager {
 
     private static final GameManager INSTANCE = new GameManager();
 
+    private static final int LEVELS_COUNT = 2;
+
     private static final String PREFS_NAME = "preferences";
-    private static final String MUSIC_PREFS_KEY = "music";
-    private static final String MAX_LEVEL_PREFS_KEY = "maxLevel";
+    private static final String SOUND_PREFS_KEY = "sound";
+    private static final String TRAINING_PREFS_KEY = "training";
+    private static final String MAX_SCORE_PREFS_KEY = "max_score";
 
     // ===========================================================
     // Fields
@@ -51,23 +54,33 @@ public class GameManager {
     }
 
     public boolean isSoundEnabled() {
-        return preferences().getBoolean(MUSIC_PREFS_KEY, true);
+        return preferences().getBoolean(SOUND_PREFS_KEY, true);
     }
 
     public void setSoundEnabled(boolean value) {
         SharedPreferences.Editor edit = preferences().edit();
-        edit.putBoolean(MUSIC_PREFS_KEY, value);
+        edit.putBoolean(SOUND_PREFS_KEY, value);
         edit.commit();
     }
 
     public int maxScore() {
-        return preferences().getInt(MAX_LEVEL_PREFS_KEY, 0);
+        return preferences().getInt(MAX_SCORE_PREFS_KEY, 0);
     }
 
     public void saveMaxScore(int value) {
 
         SharedPreferences.Editor edit = preferences().edit();
-        edit.putInt(MAX_LEVEL_PREFS_KEY, value);
+        edit.putInt(MAX_SCORE_PREFS_KEY, value);
+        edit.commit();
+    }
+
+    public boolean isTraining() {
+        return preferences().getBoolean(TRAINING_PREFS_KEY, true);
+    }
+
+    public void setTraining(boolean value) {
+        SharedPreferences.Editor edit = preferences().edit();
+        edit.putBoolean(TRAINING_PREFS_KEY, value);
         edit.commit();
     }
 
