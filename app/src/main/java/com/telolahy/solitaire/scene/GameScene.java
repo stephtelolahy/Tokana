@@ -3,7 +3,9 @@ package com.telolahy.solitaire.scene;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
 
 import com.telolahy.solitaire.R;
 import com.telolahy.solitaire.application.Constants;
@@ -199,6 +201,12 @@ public class GameScene extends BaseScene {
                         String text = soundEnabled ? mActivity.getString(R.string.music_on) : mActivity.getString(R.string.music_off);
                         mSoundTextMenuItem.setText(text);
                         GameManager.getInstance().setSoundEnabled(soundEnabled);
+                        break;
+                    case MENU_ITEM_SHARE:
+                        final String packageName = mActivity.getApplicationContext().getPackageName();
+                        String facebookShareLink = "https://www.facebook.com/sharer/sharer.php?u=https://play.google.com/store/apps/details?id=" + packageName;
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookShareLink));
+                        mActivity.startActivity(browserIntent);
                         break;
                     default:
                         break;

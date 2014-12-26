@@ -42,7 +42,7 @@ public class ResourcesManager {
     public final TextureDescription splashTexture = new TextureDescription("gfx/splash/logo.png");
 
     // menu resources
-    public final FontDescription menuTitleFont = new FontDescription("font/old_game.ttf", 84, Color.rgb(230, 183, 121), 0, Color.TRANSPARENT);
+    public final FontDescription menuTitleFont = new FontDescription("font/ARCADECLASSIC.TTF", 72, Color.TRANSPARENT, 2, Color.rgb(115, 109, 101));
     public final FontDescription menuItemFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.rgb(230, 183, 121));
     public final FontDescription menuLoadingFont = new FontDescription("font/ARCADECLASSIC.TTF", 48, Color.rgb(115, 109, 101));
     public final FontDescription menuItemWhiteFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.WHITE);
@@ -50,7 +50,7 @@ public class ResourcesManager {
     public final FontDescription menuReplayFont = new FontDescription("font/ARCADECLASSIC.TTF", 24, Color.rgb(228, 206, 119));
     public final FontDescription menuHelpFont = new FontDescription("font/Roboto-Medium.ttf", 15, Color.rgb(182, 172, 169));
 
-    public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/item_click.ogg", sharedSoundConditioner);
+    public final SoundDescription menuItemClickedSound = new SoundDescription("mfx/piece_move.mp3", sharedSoundConditioner);
     public final SoundDescription gameElementMovedSound = new SoundDescription("mfx/piece_move.mp3", sharedSoundConditioner);
 
     // game resources
