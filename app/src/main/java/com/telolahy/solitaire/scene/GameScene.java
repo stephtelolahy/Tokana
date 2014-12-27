@@ -204,7 +204,7 @@ public class GameScene extends BaseScene {
                         break;
                     case MENU_ITEM_SHARE:
                         final String packageName = mActivity.getApplicationContext().getPackageName();
-                        String facebookShareLink = "https://www.facebook.com/sharer/sharer.php?u=https://play.google.com/store/apps/details?id=" + packageName;
+                        String facebookShareLink = "https://m.facebook.com/sharer.php?u=https://play.google.com/store/apps/details?id=" + packageName;
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookShareLink));
                         mActivity.startActivity(browserIntent);
                         break;
