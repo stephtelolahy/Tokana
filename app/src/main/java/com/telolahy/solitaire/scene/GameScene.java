@@ -4,6 +4,7 @@ package com.telolahy.solitaire.scene;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Point;
 import android.net.Uri;
 
@@ -28,6 +29,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.adt.align.HorizontalAlign;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by stephanohuguestelolahy on 11/16/14.
@@ -203,10 +205,7 @@ public class GameScene extends BaseScene {
                         GameManager.getInstance().setSoundEnabled(soundEnabled);
                         break;
                     case MENU_ITEM_SHARE:
-                        final String packageName = mActivity.getApplicationContext().getPackageName();
-                        String facebookShareLink = "https://m.facebook.com/sharer.php?u=https://play.google.com/store/apps/details?id=" + packageName;
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookShareLink));
-                        mActivity.startActivity(browserIntent);
+                        shareApp();
                         break;
                     default:
                         break;
@@ -459,6 +458,18 @@ public class GameScene extends BaseScene {
                 builder.show();
             }
         });
+    }
+
+    private void shareApp() {
+
+        final String packageName = mActivity.getApplicationContext().getPackageName();
+        String appUrl = "https://play.google.com/store/apps/details?id=" + packageName;
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hey, download this app! " + appUrl);
+        mActivity.startActivity(shareIntent);
     }
 
     // ===========================================================
