@@ -4,7 +4,6 @@ package com.telolahy.solitaire.scene;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.graphics.Point;
 import android.net.Uri;
 
@@ -28,8 +27,8 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.adt.align.HorizontalAlign;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by stephanohuguestelolahy on 11/16/14.
@@ -462,29 +461,12 @@ public class GameScene extends BaseScene {
 
     private void shareApp() {
 
-        final String packageName = mActivity.getApplicationContext().getPackageName();
-        String appUrl = "https://play.google.com/store/apps/details?id=" + packageName;
-
-        String urlToShare = appUrl;//"http://androidtoppers.com";
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, urlToShare);
-        // See if official Facebook app is found
-        boolean facebookAppFound = false;
-        List<ResolveInfo> matches = mActivity.getPackageManager().queryIntentActivities(intent, 0);
-        for (ResolveInfo info : matches) {
-            if (info.activityInfo.packageName.toLowerCase().startsWith("com.facebook")) {
-                intent.setPackage(info.activityInfo.packageName);
-                facebookAppFound = true;
-                break;
-            }
-        }
-        //If facebook app not found, load sharer.php in a browser
-        if (!facebookAppFound) {
-            String sharerUrl = "https://www.facebook.com/sharer/sharer.php?u=" + urlToShare;
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl));
-        }
-        mActivity.startActivity(intent);
+        String appLink = URLEncoder.encode("https://play.google.com/store/apps/details?id=" + mActivity.getApplicationContext().getPackageName());
+        String title = mActivity.getString(R.string.app_name);
+        String description = URLEncoder.encode(mActivity.getString(R.string.get_it_on_store));
+        String imageUrl = URLEncoder.encode("http://www.terraekita.com/images/rub4/calb69TERRA_EKITA___510__JPG.JPG");
+        String urlToShare = "https://www.facebook.com/dialog/feed?app_id=694165360698061&link=" + appLink + "&picture=" + imageUrl + "&name=" + title + "&caption=%20&description=" + description + "&redirect_uri=http%3A%2F%2Fwww.facebook.com%2F";
+        mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlToShare)));
     }
 
     // ===========================================================
