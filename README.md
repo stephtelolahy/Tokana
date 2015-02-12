@@ -1,0 +1,2 @@
+# Solitaire
+Malagasy solitary game
